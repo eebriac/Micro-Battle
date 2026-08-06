@@ -1,0 +1,57 @@
+body {
+
+    margin:0;
+
+    font-family:Arial;
+
+    background:#1f2937;
+
+    color:white;
+
+    text-align:center;
+}
+
+.titleScreen{
+
+    margin-top:120px;
+}
+
+button{
+
+    font-size:24px;
+
+    padding:15px 40px;
+
+    border-radius:12px;
+
+    border:none;
+
+    cursor:pointer;
+}
+
+.board{
+
+    margin:30px auto;
+
+    border-collapse:collapse;
+}
+
+.board th{
+
+    width:34px;
+    height:34px;
+
+    color:white;
+
+    font-size:18px;
+}
+
+.board td{
+
+    width:34px;
+    height:34px;
+
+    background:white;
+
+    border:1px solid #999;
+}
