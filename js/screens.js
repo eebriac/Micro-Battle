@@ -27,5 +27,5 @@ function showGameScreen() {
         <div id="gameBoard"></div>
     `;
 
-    renderBoard();
+    renderBoard(puzzle);
 }
