@@ -23,11 +23,11 @@ function showGameScreen() {
 
     const app = document.getElementById("app");
 
-    app.innerHTML = '
+    app.innerHTML = `
         <div id="gameScreen">
             <div id="board"></div>
         </div>
-    ';
+    `;
 
     renderBoard(puzzle);
 }
