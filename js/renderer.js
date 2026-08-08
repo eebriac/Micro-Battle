@@ -2,19 +2,125 @@ function renderBoard(puzzle) {
 
     const board = document.getElementById("board");
 
+    board.innerHTML = "";
+
     const canvas = document.createElement("canvas");
 
-    canvas.width = 400;
-    canvas.height = 400;
+    canvas.id = "gameCanvas";
 
     board.appendChild(canvas);
 
     const ctx = canvas.getContext("2d");
+    
+    setupInput(canvas, puzzle);
 
-    ctx.fillStyle = "lightblue";
-    ctx.fillRect(0, 0, 400, 400);
+    const clueSize = 40;
 
-    ctx.fillStyle = "black";
-    ctx.font = "24px sans-serif";
-    ctx.fillText("Canvas works!", 100, 200);
+    // Use the available screen width.
+    const availableWidth = window.innerWidth;
+
+    // Leave room for the row clues.
+    const cellSize = Math.floor(
+        (availableWidth - clueSize) / puzzle.width
+    );
+
+    canvas.width = clueSize + puzzle.width * cellSize;
+    canvas.height = clueSize + puzzle.height * cellSize;
+
+    // Background
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Grid
+    ctx.strokeStyle = "#000000";
+    ctx.lineWidth = 1;
+
+    for (let row = 0; row <= puzzle.height; row++) {
+
+        const y = clueSize + row * cellSize;
+
+        ctx.beginPath();
+        ctx.moveTo(clueSize, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+    }
+
+    for (let col = 0; col <= puzzle.width; col++) {
+
+        const x = clueSize + col * cellSize;
+
+        ctx.beginPath();
+        ctx.moveTo(x, clueSize);
+        ctx.lineTo(x, canvas.height);
+        ctx.stroke();
+    }
+    
+    // Draw player tiles
+for (let row = 0; row < puzzle.height; row++) {
+
+    for (let col = 0; col < puzzle.width; col++) {
+
+        const tile = getTile(row, col);
+
+        const x = clueSize + col * cellSize;
+        const y = clueSize + row * cellSize;
+
+        if (tile === SHIP) {
+
+            ctx.fillStyle = "#555555";
+
+            ctx.fillRect(
+                x + 2,
+                y + 2,
+                cellSize - 4,
+                cellSize - 4
+            );
+        }
+
+        if (tile === WATER) {
+
+            ctx.fillStyle = "#cccccc";
+
+            ctx.fillRect(
+                x + 2,
+                y + 2,
+                cellSize - 4,
+                cellSize - 4
+            );
+        }
+    }
+}
+    
+     
+
+
+    // Clues
+    ctx.fillStyle = "#000000";
+    ctx.font = `${Math.floor(cellSize * 0.45)}px sans-serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Row clues
+    for (let row = 0; row < puzzle.height; row++) {
+
+        const y = clueSize + row * cellSize + cellSize / 2;
+
+        ctx.fillText(
+            puzzle.rowClues[row],
+            clueSize / 2,
+            y
+        );
+    }
+
+    // Column clues
+    for (let col = 0; col < puzzle.width; col++) {
+
+        const x = clueSize + col * cellSize + cellSize / 2;
+
+        ctx.fillText(
+            puzzle.colClues[col],
+            x,
+            clueSize / 2
+        );
+    }
 }
