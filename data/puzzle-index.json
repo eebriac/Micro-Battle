@@ -1,0 +1,15 @@
+{
+    "version": 1,
+    "puzzles": [
+        {
+            "id": "microbattle-0001",
+            "type": "microbattle",
+            "file": "puzzles/microbattle/microbattle-0001.json"
+        },
+		{
+            "id": "microbattle-0002",
+            "type": "microbattle",
+            "file": "puzzles/microbattle/microbattle-0002.json"
+        }
+    ]
+}

@@ -1,155 +1,161 @@
 body {
+	margin: 0;
 
-    margin:0;
+	font-family: Arial;
 
-    font-family:Arial;
+	background: #1f2937;
 
-    background:#1f2937;
+	color: white;
 
-    color:white;
-
-    text-align:center;
+	text-align: center;
 }
 
-.titleScreen{
-
-    margin-top:120px;
+.titleScreen {
+	margin-top: 120px;
 }
 
-button{
+button {
+	font-size: 24px;
 
-    font-size:24px;
+	padding: 15px 40px;
 
-    padding:15px 40px;
+	border-radius: 12px;
 
-    border-radius:12px;
+	border: none;
 
-    border:none;
-
-    cursor:pointer;
+	cursor: pointer;
 }
 
-.board{
+.board {
+	margin: 30px auto;
 
-    margin:30px auto;
-
-    border-collapse:collapse;
+	border-collapse: collapse;
 }
 
-.board th{
+.board th {
+	width: 34px;
+	height: 34px;
 
-    width:34px;
-    height:34px;
+	color: white;
 
-    color:white;
-
-    font-size:18px;
+	font-size: 18px;
 }
 
-.board td{
+.board td {
+	width: 34px;
+	height: 34px;
 
-    width:34px;
-    height:34px;
+	background: white;
 
-    background:white;
-
-    border:1px solid #999;
+	border: 1px solid #999;
 }
 
 #gameControls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    max-width: 600px;
-    margin: 15px auto 0;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	max-width: 600px;
+	margin: 15px auto 0;
 }
 
 #historyControls {
-    display: flex;
-    gap: 10px;
+	display: flex;
+	gap: 10px;
 }
 
 #gameControls button {
-    width: 52px;
-    height: 52px;
+	width: 52px;
+	height: 52px;
 
-    font-size: 28px;
+	font-size: 28px;
 
-    border: none;
-    border-radius: 12px;
+	border: none;
+	border-radius: 12px;
 
-    background: #eeeeee;
+	background: #eeeeee;
 
-    cursor: pointer;
+	cursor: pointer;
 
-    -webkit-tap-highlight-color: transparent;
+	-webkit-tap-highlight-color: transparent;
 }
 
 #gameControls button:active {
-    transform: scale(0.92);
+	transform: scale(0.92);
 }
 
 html,
 body {
-    touch-action: none;
-    overscroll-behavior: none;
+	touch-action: none;
+	overscroll-behavior: none;
 }
 
-#gameCanvas {
-    touch-action: none;
-    user-select: none;
-    -webkit-user-select: none;
-    -webkit-touch-callout: none;
+html,
+body {
+	touch-action: none;
+	overscroll-behavior: none;
 }
 
 #gameScreen {
-    position: relative;
+	position: relative;
+
+	touch-action: none;
+	user-select: none;
+	-webkit-user-select: none;
+	-webkit-touch-callout: none;
+}
+
+#button {
+	touch-action: manipulation;
+}
+
+#gameCanvas {
+	touch-action: none;
 }
 
 #winOverlay {
-    position: absolute;
-    inset: 0;
+	position: absolute;
+	inset: 0;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 
-    background: rgba(0, 0, 0, 0.35);
+	background: rgba(0, 0, 0, 0.35);
 }
 
 #winMessage {
-    background: white;
-    color: #222222;
+	background: white;
+	color: #222222;
 
-    padding: 30px;
-    border-radius: 20px;
+	padding: 30px;
+	border-radius: 20px;
 
-    text-align: center;
+	text-align: center;
 
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+	box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
 }
 
 #winMessage h2 {
-    margin-top: 0;
+	margin-top: 0;
 }
 
 #nextPuzzleButton {
-    padding: 12px 20px;
+	padding: 12px 20px;
 
-    font-size: 18px;
+	font-size: 18px;
 
-    color: white;
-    background: #333333;
+	color: white;
+	background: #333333;
 
-    border: none;
-    border-radius: 10px;
+	border: none;
+	border-radius: 10px;
 
-    cursor: pointer;
+	cursor: pointer;
 }
 
 #gameControls button:disabled {
-    opacity: 0.35;
-    cursor: default;
-    transform: none;
+	opacity: 0.35;
+	cursor: default;
+	transform: none;
 }
