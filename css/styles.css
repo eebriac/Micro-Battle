@@ -55,3 +55,37 @@ button{
 
     border:1px solid #999;
 }
+
+#gameControls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 15px auto 0;
+}
+
+#historyControls {
+    display: flex;
+    gap: 10px;
+}
+
+#gameControls button {
+    width: 52px;
+    height: 52px;
+
+    font-size: 28px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: #eeeeee;
+
+    cursor: pointer;
+
+    -webkit-tap-highlight-color: transparent;
+}
+
+#gameControls button:active {
+    transform: scale(0.92);
+}

@@ -29,7 +29,7 @@ function setupInput(canvas, puzzle) {
 }
 
 
-        cycleTile(row, col);
+        makeMove(row, col);
 
         renderBoard(puzzle);
     });

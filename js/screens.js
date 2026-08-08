@@ -22,10 +22,63 @@ function showGameScreen() {
 
     app.innerHTML = `
         <div id="gameScreen">
+
             <h1>Game Screen</h1>
+
             <div id="board"></div>
+
+            <div id="gameControls">
+
+                <button id="resetButton" aria-label="Reset puzzle">
+                    ↻
+                </button>
+
+                <div id="historyControls">
+
+                    <button id="undoButton" aria-label="Undo">
+                        ↶
+                    </button>
+
+                    <button id="redoButton" aria-label="Redo">
+                        ↷
+                    </button>
+
+                </div>
+
+            </div>
+
         </div>
     `;
+
     createPlayerBoard(puzzle);
+
+    document
+        .getElementById("resetButton")
+        .onclick = function() {
+
+            if (confirm("Are you sure you want to reset this puzzle?")) {
+                resetPlayerBoard(puzzle);
+                renderBoard(puzzle);
+            }
+        };
+
+    document
+        .getElementById("undoButton")
+        .onclick = function() {
+
+            if (undoMove()) {
+                renderBoard(puzzle);
+            }
+        };
+
+    document
+        .getElementById("redoButton")
+        .onclick = function() {
+
+            if (redoMove()) {
+                renderBoard(puzzle);
+            }
+        };
+
     renderBoard(puzzle);
 }

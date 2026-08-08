@@ -4,6 +4,9 @@ const SHIP = "S";
 
 let playerBoard = [];
 
+let undoStack = [];
+let redoStack = [];
+
 function createPlayerBoard(puzzle) {
 
     playerBoard = [];
@@ -15,14 +18,14 @@ function createPlayerBoard(puzzle) {
         const newRow = [];
 
         for (let col = 0; col < puzzle.width; col++) {
-
-            newRow.push(
-                initialRow[col] ?? EMPTY
-            );
+            newRow.push(initialRow[col] ?? EMPTY);
         }
 
         playerBoard.push(newRow);
     }
+
+    undoStack = [];
+    redoStack = [];
 }
 
 function isInitialTile(puzzle, row, col) {
@@ -44,6 +47,15 @@ function setTile(row, col, tile) {
     playerBoard[row][col] = tile;
 }
 
+function makeMove(row, col) {
+
+    undoStack.push(copyBoard(playerBoard));
+
+    redoStack = [];
+
+    cycleTile(row, col);
+}
+
 function cycleTile(row, col) {
 
     const currentTile = getTile(row, col);
@@ -57,4 +69,39 @@ function cycleTile(row, col) {
     else {
         setTile(row, col, EMPTY);
     }
+}
+
+function undoMove() {
+
+    if (undoStack.length === 0) {
+        return false;
+    }
+
+    redoStack.push(copyBoard(playerBoard));
+
+    playerBoard = undoStack.pop();
+
+    return true;
+}
+
+function redoMove() {
+
+    if (redoStack.length === 0) {
+        return false;
+    }
+
+    undoStack.push(copyBoard(playerBoard));
+
+    playerBoard = redoStack.pop();
+
+    return true;
+}
+
+function copyBoard(board) {
+
+    return board.map(row => [...row]);
+}
+
+function resetPlayerBoard(puzzle) {
+    createPlayerBoard(puzzle);
 }
