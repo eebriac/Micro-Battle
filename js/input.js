@@ -21,8 +21,11 @@ function setupInput(canvas, puzzle) {
 			return;
 		}
 
-		makeMove(row, col);
+		if (gameWon) {
+			return;
+		}
 
-		renderBoard(puzzle);
+		makeMove(row, col);
+		updateGame(puzzle);
 	});
 }

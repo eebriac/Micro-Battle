@@ -3,9 +3,9 @@ const WATER = "W";
 const SHIP = "S";
 
 let playerBoard = [];
-
 let undoStack = [];
 let redoStack = [];
+let gameWon = false;
 
 function createPlayerBoard(puzzle) {
 	playerBoard = [];
@@ -24,6 +24,7 @@ function createPlayerBoard(puzzle) {
 
 	undoStack = [];
 	redoStack = [];
+	gameWon = false;
 }
 
 function isInitialTile(puzzle, row, col) {
@@ -62,6 +63,14 @@ function cycleTile(row, col) {
 	}
 }
 
+function canUndo() {
+    return undoStack.length > 0;
+}
+
+function canRedo() {
+    return redoStack.length > 0;
+}
+
 function undoMove() {
 	if (undoStack.length === 0) {
 		return false;
@@ -92,4 +101,35 @@ function copyBoard(board) {
 
 function resetPlayerBoard(puzzle) {
 	createPlayerBoard(puzzle);
+}
+
+function completePuzzle(puzzle) {
+	for (let row = 0; row < puzzle.height; row++) {
+		for (let col = 0; col < puzzle.width; col++) {
+			if (playerBoard[row][col] === EMPTY) {
+				playerBoard[row][col] = WATER;
+			}
+		}
+	}
+
+	gameWon = true;
+}
+
+function isPuzzleSolved(puzzle) {
+	for (let row = 0; row < puzzle.height; row++) {
+		for (let col = 0; col < puzzle.width; col++) {
+			const solutionTile = puzzle.solution[row][col];
+			const playerTile = playerBoard[row][col];
+
+			if (solutionTile === SHIP && playerTile !== SHIP) {
+				return false;
+			}
+
+			if (solutionTile !== SHIP && playerTile === SHIP) {
+				return false;
+			}
+		}
+	}
+
+	return true;
 }

@@ -1,8 +1,7 @@
 function showTitleScreen() {
+	const app = document.getElementById("app");
 
-    const app = document.getElementById("app");
-
-    app.innerHTML = `
+	app.innerHTML = `
         <div class="titleScreen">
             <h1>Micro-battle🦠</h1>
             <button id="startButton">
@@ -11,16 +10,13 @@ function showTitleScreen() {
         </div>
     `;
 
-    document
-        .getElementById("startButton")
-        .onclick = showGameScreen;
+	document.getElementById("startButton").onclick = showGameScreen;
 }
 
 function showGameScreen() {
+	const app = document.getElementById("app");
 
-    const app = document.getElementById("app");
-
-    app.innerHTML = `
+	app.innerHTML = `
         <div id="gameScreen">
 
             <div id="board"></div>
@@ -48,35 +44,71 @@ function showGameScreen() {
         </div>
     `;
 
-    createPlayerBoard(puzzle);
+	createPlayerBoard(puzzle);
 
-    document
-        .getElementById("resetButton")
-        .onclick = function() {
+	document.getElementById("resetButton").onclick = function () {
+		if (confirm("Are you sure you want to reset this puzzle?")) {
+			resetPlayerBoard(puzzle);
+			updateGame(puzzle);
+		}
+	};
 
-            if (confirm("Are you sure you want to reset this puzzle?")) {
-                resetPlayerBoard(puzzle);
-                renderBoard(puzzle);
-            }
-        };
+	document.getElementById("undoButton").onclick = function () {
+		if (undoMove()) {
+			updateGame(puzzle);
+		}
+	};
 
-    document
-        .getElementById("undoButton")
-        .onclick = function() {
+	document.getElementById("redoButton").onclick = function () {
+		if (redoMove()) {
+			updateGame(puzzle);
+		}
+	};
 
-            if (undoMove()) {
-                renderBoard(puzzle);
-            }
-        };
+	updateGame(puzzle);
+}
 
-    document
-        .getElementById("redoButton")
-        .onclick = function() {
+function showWinScreen() {
+	const gameScreen = document.getElementById("gameScreen");
 
-            if (redoMove()) {
-                renderBoard(puzzle);
-            }
-        };
+	const overlay = document.createElement("div");
 
-    renderBoard(puzzle);
+	overlay.id = "winOverlay";
+
+	overlay.innerHTML = `
+        <div id="winMessage">
+            <h2>🦠Complete!🦠</h2>
+            <button id="nextPuzzleButton">
+                Next Puzzle
+            </button>
+        </div>
+    `;
+
+	gameScreen.appendChild(overlay);
+}
+
+function updateHistoryButtons() {
+	const undoButton = document.getElementById("undoButton");
+	const redoButton = document.getElementById("redoButton");
+
+	if (!undoButton || !redoButton) {
+		return;
+	}
+
+	undoButton.disabled = gameWon || !canUndo();
+	redoButton.disabled = gameWon || !canRedo();
+}
+
+function updateGame(puzzle) {
+	if (!gameWon && isPuzzleSolved(puzzle)) {
+		completePuzzle(puzzle);
+	}
+
+	renderBoard(puzzle);
+
+	updateHistoryButtons();
+
+	if (gameWon) {
+		showWinScreen();
+	}
 }
