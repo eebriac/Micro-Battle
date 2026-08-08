@@ -22,9 +22,8 @@ function showGameScreen() {
 
     app.innerHTML = `
         <div id="gameScreen">
+            <h1>Game Screen</h1>
             <div id="board"></div>
         </div>
     `;
-
-    renderBoard(puzzle);
 }
