@@ -1,3 +1,1 @@
-window.onload = () => {
-    showTitleScreen();
-};
+showTitleScreen();
