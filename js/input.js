@@ -1,36 +1,28 @@
 function setupInput(canvas, puzzle) {
+	canvas.addEventListener("pointerdown", function (event) {
+		const rect = canvas.getBoundingClientRect();
 
-    canvas.addEventListener("pointerdown", function(event) {
+		const clueSize = 40;
 
-        const rect = canvas.getBoundingClientRect();
+		const cellSize = (canvas.width - clueSize) / puzzle.width;
 
-        const clueSize = 40;
+		const x = event.clientX - rect.left - clueSize;
+		const y = event.clientY - rect.top - clueSize;
 
-        const cellSize = (canvas.width - clueSize) / puzzle.width;
+		const col = Math.floor(x / cellSize);
+		const row = Math.floor(y / cellSize);
 
-        const x = event.clientX - rect.left - clueSize;
-        const y = event.clientY - rect.top - clueSize;
+		// Ignore taps outside the puzzle grid.
+		if (row < 0 || row >= puzzle.height || col < 0 || col >= puzzle.width) {
+			return;
+		}
 
-        const col = Math.floor(x / cellSize);
-        const row = Math.floor(y / cellSize);
+		if (isInitialTile(puzzle, row, col)) {
+			return;
+		}
 
-        // Ignore taps outside the puzzle grid.
-        if (
-            row < 0 ||
-            row >= puzzle.height ||
-            col < 0 ||
-            col >= puzzle.width
-        ) {
-            return;
-        }
-        
-        if (isInitialTile(puzzle, row, col)) {
-    return;
-}
+		makeMove(row, col);
 
-
-        makeMove(row, col);
-
-        renderBoard(puzzle);
-    });
+		renderBoard(puzzle);
+	});
 }

@@ -3,10 +3,13 @@ function renderBoard(puzzle) {
     const board = document.getElementById("board");
 
     board.innerHTML = "";
-
+    
     const canvas = document.createElement("canvas");
 
-    canvas.id = "gameCanvas";
+canvas.id = "gameCanvas";
+canvas.style.touchAction = "none";
+
+
 
     board.appendChild(canvas);
 

@@ -4,7 +4,7 @@ function showTitleScreen() {
 
     app.innerHTML = `
         <div class="titleScreen">
-            <h1>Fleet Logic</h1>
+            <h1>Micro-battle🦠</h1>
             <button id="startButton">
                 Start Puzzle
             </button>
@@ -22,8 +22,6 @@ function showGameScreen() {
 
     app.innerHTML = `
         <div id="gameScreen">
-
-            <h1>Game Screen</h1>
 
             <div id="board"></div>
 

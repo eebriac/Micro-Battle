@@ -8,100 +8,88 @@ let undoStack = [];
 let redoStack = [];
 
 function createPlayerBoard(puzzle) {
+	playerBoard = [];
 
-    playerBoard = [];
+	for (let row = 0; row < puzzle.height; row++) {
+		const initialRow = puzzle.initialState[row];
 
-    for (let row = 0; row < puzzle.height; row++) {
+		const newRow = [];
 
-        const initialRow = puzzle.initialState[row];
+		for (let col = 0; col < puzzle.width; col++) {
+			newRow.push(initialRow[col] ?? EMPTY);
+		}
 
-        const newRow = [];
+		playerBoard.push(newRow);
+	}
 
-        for (let col = 0; col < puzzle.width; col++) {
-            newRow.push(initialRow[col] ?? EMPTY);
-        }
-
-        playerBoard.push(newRow);
-    }
-
-    undoStack = [];
-    redoStack = [];
+	undoStack = [];
+	redoStack = [];
 }
 
 function isInitialTile(puzzle, row, col) {
-
-    return puzzle.initialState[row][col] !== EMPTY;
+	return puzzle.initialState[row][col] !== EMPTY;
 }
 
 function getTile(row, col) {
+	if (!playerBoard[row]) {
+		return EMPTY;
+	}
 
-    if (!playerBoard[row]) {
-        return EMPTY;
-    }
-
-    return playerBoard[row][col] ?? EMPTY;
+	return playerBoard[row][col] ?? EMPTY;
 }
 
 function setTile(row, col, tile) {
-
-    playerBoard[row][col] = tile;
+	playerBoard[row][col] = tile;
 }
 
 function makeMove(row, col) {
+	undoStack.push(copyBoard(playerBoard));
 
-    undoStack.push(copyBoard(playerBoard));
+	redoStack = [];
 
-    redoStack = [];
-
-    cycleTile(row, col);
+	cycleTile(row, col);
 }
 
 function cycleTile(row, col) {
+	const currentTile = getTile(row, col);
 
-    const currentTile = getTile(row, col);
-
-    if (currentTile === EMPTY) {
-        setTile(row, col, WATER);
-    }
-    else if (currentTile === WATER) {
-        setTile(row, col, SHIP);
-    }
-    else {
-        setTile(row, col, EMPTY);
-    }
+	if (currentTile === EMPTY) {
+		setTile(row, col, WATER);
+	} else if (currentTile === WATER) {
+		setTile(row, col, SHIP);
+	} else {
+		setTile(row, col, EMPTY);
+	}
 }
 
 function undoMove() {
+	if (undoStack.length === 0) {
+		return false;
+	}
 
-    if (undoStack.length === 0) {
-        return false;
-    }
+	redoStack.push(copyBoard(playerBoard));
 
-    redoStack.push(copyBoard(playerBoard));
+	playerBoard = undoStack.pop();
 
-    playerBoard = undoStack.pop();
-
-    return true;
+	return true;
 }
 
 function redoMove() {
+	if (redoStack.length === 0) {
+		return false;
+	}
 
-    if (redoStack.length === 0) {
-        return false;
-    }
+	undoStack.push(copyBoard(playerBoard));
 
-    undoStack.push(copyBoard(playerBoard));
+	playerBoard = redoStack.pop();
 
-    playerBoard = redoStack.pop();
-
-    return true;
+	return true;
 }
 
 function copyBoard(board) {
-
-    return board.map(row => [...row]);
+	return board.map((row) => [...row]);
 }
 
 function resetPlayerBoard(puzzle) {
-    createPlayerBoard(puzzle);
+	createPlayerBoard(puzzle);
 }
