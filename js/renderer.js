@@ -12,7 +12,7 @@ function renderBoard(puzzle) {
 
     const ctx = canvas.getContext("2d");
     
-    setupInput(canvas, puzzle);
+    
 
     const clueSize = 40;
 
@@ -62,32 +62,18 @@ for (let row = 0; row < puzzle.height; row++) {
 
         const tile = getTile(row, col);
 
-        const x = clueSize + col * cellSize;
-        const y = clueSize + row * cellSize;
+const x = clueSize + col * cellSize;
+const y = clueSize + row * cellSize;
 
-        if (tile === SHIP) {
-
-            ctx.fillStyle = "#555555";
-
-            ctx.fillRect(
-                x + 2,
-                y + 2,
-                cellSize - 4,
-                cellSize - 4
-            );
-        }
-
-        if (tile === WATER) {
-
-            ctx.fillStyle = "#cccccc";
-
-            ctx.fillRect(
-                x + 2,
-                y + 2,
-                cellSize - 4,
-                cellSize - 4
-            );
-        }
+drawTile(
+    ctx,
+    tile,
+    x,
+    y,
+    cellSize,
+    row,
+    col
+);
     }
 }
     
@@ -123,4 +109,6 @@ for (let row = 0; row < puzzle.height; row++) {
             clueSize / 2
         );
     }
+    
+    setupInput(canvas, puzzle);
 }

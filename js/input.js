@@ -23,6 +23,11 @@ function setupInput(canvas, puzzle) {
         ) {
             return;
         }
+        
+        if (isInitialTile(puzzle, row, col)) {
+    return;
+}
+
 
         cycleTile(row, col);
 
