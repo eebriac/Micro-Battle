@@ -28,7 +28,23 @@
 <script src="js/input.js"></script>
 <script src="js/screens.js"></script>
 <script src="js/app.js"></script>
+<script>
+if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for (const registration of registrations) {
+            registration.unregister();
+        }
+    });
 
+    if ("caches" in window) {
+        caches.keys().then(function(names) {
+            for (const name of names) {
+                caches.delete(name);
+            }
+        });
+    }
+}
+</script>
 
 </body>
 </html>
