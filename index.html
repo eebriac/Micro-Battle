@@ -19,32 +19,15 @@
       content="MicroBattleships">
 </head>
 <body>
-<h1>laded</h1>
+<h1>page loaded</h1>
 
 <div id="app"></div>
 
-<script src="js/board.js?v=1"></script>
-<script src="js/renderer.js?v=1"></script>
-<script src="js/input.js?v=1"></script>
-<script src="js/screens?v=1.js"></script>
-<script src="js/app.js?v=1"></script>
-<script>
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.getRegistrations().then(function(registrations) {
-        for (const registration of registrations) {
-            registration.unregister();
-        }
-    });
-
-    if ("caches" in window) {
-        caches.keys().then(function(names) {
-            for (const name of names) {
-                caches.delete(name);
-            }
-        });
-    }
-}
-</script>
+<script src="js/board.js?v=2"></script>
+<script src="js/renderer.js?v=2"></script>
+<script src="js/input.js?v=2"></script>
+<script src="js/screens?v=2.js"></script>
+<script src="js/app.js?v=2"></script>
 
 </body>
 </html>
