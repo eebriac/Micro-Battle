@@ -4,13 +4,10 @@ function showTitleScreen() {
 
     app.innerHTML = `
         <div class="titleScreen">
-
             <h1>Fleet Logic</h1>
-
             <button id="startButton">
                 Start Puzzle
             </button>
-
         </div>
     `;
 
