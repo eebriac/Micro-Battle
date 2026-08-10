@@ -8,7 +8,7 @@ function drawTile(ctx, tile, x, y, size, row, col) {
         drawWaterTile(ctx, x, y, size);
     }
 
-    else if (tile === SHIP) {
+    else {
         drawShipTile(ctx, x, y, size, row, col);
     }
 }

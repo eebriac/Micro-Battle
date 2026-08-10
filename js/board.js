@@ -5,26 +5,34 @@ const SHIP = "S";
 let playerBoard = [];
 let undoStack = [];
 let redoStack = [];
-let gameWon = false;
 
 function createPlayerBoard(puzzle) {
-	playerBoard = [];
 
-	for (let row = 0; row < puzzle.height; row++) {
-		const initialRow = puzzle.initialState[row];
+    playerBoard = [];
 
-		const newRow = [];
+    for (let row = 0; row < puzzle.height; row++) {
 
-		for (let col = 0; col < puzzle.width; col++) {
-			newRow.push(initialRow[col] ?? EMPTY);
-		}
+        const initialRow = puzzle.initialState[row];
 
-		playerBoard.push(newRow);
-	}
+        const newRow = [];
 
-	undoStack = [];
-	redoStack = [];
-	gameWon = false;
+        for (let col = 0; col < puzzle.width; col++) {
+
+            newRow.push(
+                initialRow[col] ?? EMPTY
+            );
+        }
+
+        playerBoard.push(newRow);
+    }
+
+    undoStack = [];
+    redoStack = [];
+
+    gameWon = false;
+
+    createInventory(puzzle);
+    updateInventory(puzzle);
 }
 
 function isInitialTile(puzzle, row, col) {
@@ -49,6 +57,8 @@ function makeMove(row, col) {
 	redoStack = [];
 
 	cycleTile(row, col);
+
+	updateInventory(puzzle);
 }
 
 function cycleTile(row, col) {
@@ -64,11 +74,11 @@ function cycleTile(row, col) {
 }
 
 function canUndo() {
-    return undoStack.length > 0;
+	return undoStack.length > 0;
 }
 
 function canRedo() {
-    return redoStack.length > 0;
+	return redoStack.length > 0;
 }
 
 function undoMove() {
@@ -79,6 +89,8 @@ function undoMove() {
 	redoStack.push(copyBoard(playerBoard));
 
 	playerBoard = undoStack.pop();
+
+	updateInventory(puzzle);
 
 	return true;
 }
@@ -91,6 +103,8 @@ function redoMove() {
 	undoStack.push(copyBoard(playerBoard));
 
 	playerBoard = redoStack.pop();
+
+	updateInventory(puzzle);
 
 	return true;
 }
@@ -113,23 +127,4 @@ function completePuzzle(puzzle) {
 	}
 
 	gameWon = true;
-}
-
-function isPuzzleSolved(puzzle) {
-	for (let row = 0; row < puzzle.height; row++) {
-		for (let col = 0; col < puzzle.width; col++) {
-			const solutionTile = puzzle.solution[row][col];
-			const playerTile = playerBoard[row][col];
-
-			if (solutionTile === SHIP && playerTile !== SHIP) {
-				return false;
-			}
-
-			if (solutionTile !== SHIP && playerTile === SHIP) {
-				return false;
-			}
-		}
-	}
-
-	return true;
 }

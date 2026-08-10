@@ -1,31 +1,57 @@
-function setupInput(canvas, puzzle) {
-	canvas.addEventListener("pointerdown", function (event) {
-		const rect = canvas.getBoundingClientRect();
+function setupInput(canvas, puzzle, inventoryHeight) {
 
-		const clueSize = 40;
+    canvas.addEventListener("pointerdown", function (event) {
 
-		const cellSize = (canvas.width - clueSize) / puzzle.width;
+        const rect =
+            canvas.getBoundingClientRect();
 
-		const x = event.clientX - rect.left - clueSize;
-		const y = event.clientY - rect.top - clueSize;
+        const clueSize = 40;
 
-		const col = Math.floor(x / cellSize);
-		const row = Math.floor(y / cellSize);
+        const cellSize =
+            (canvas.width - clueSize) / puzzle.width;
 
-		// Ignore taps outside the puzzle grid.
-		if (row < 0 || row >= puzzle.height || col < 0 || col >= puzzle.width) {
-			return;
-		}
+        const x =
+            event.clientX -
+            rect.left -
+            clueSize;
 
-		if (isInitialTile(puzzle, row, col)) {
-			return;
-		}
+        const y =
+            event.clientY -
+            rect.top -
+            inventoryHeight -
+            clueSize;
 
-		if (gameWon) {
-			return;
-		}
+        const col =
+            Math.floor(x / cellSize);
 
-		makeMove(row, col);
-		updateGame(puzzle);
-	});
+        const row =
+            Math.floor(y / cellSize);
+
+
+        // Ignore taps outside the puzzle grid.
+
+        if (
+            row < 0 ||
+            row >= puzzle.height ||
+            col < 0 ||
+            col >= puzzle.width
+        ) {
+            return;
+        }
+
+
+        if (isInitialTile(puzzle, row, col)) {
+            return;
+        }
+
+
+        if (gameWon) {
+            return;
+        }
+
+
+        makeMove(row, col);
+
+        updateGame(puzzle);
+    });
 }

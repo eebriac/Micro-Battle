@@ -4,12 +4,21 @@
         {
             "id": "microbattle-0001",
             "type": "microbattle",
+            "difficulty": 1,
             "file": "puzzles/microbattle/microbattle-0001.json"
         },
-		{
+        {
             "id": "microbattle-0002",
             "type": "microbattle",
+            "difficulty": 1,
             "file": "puzzles/microbattle/microbattle-0002.json"
+        },
+        {
+            "id": "microbattle-0003",
+            "type": "microbattle",
+            "difficulty": 2,
+            "file": "puzzles/microbattle/microbattle-0003.json"
         }
+        
     ]
 }

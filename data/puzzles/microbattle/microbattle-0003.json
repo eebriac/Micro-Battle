@@ -5,9 +5,9 @@
 	"width": 8,
 	"height": 10,
 
-	"rowClues": [2, 2, 2, 0, 4, 0, 2, 0, 0, 1],
+	"rowClues": [2, 2, 2, 0, 4, 0, 4, 2, 0, 4],
 
-	"colClues": [0, 1, 1, 3, 1, 1, 1, 5],
+	"colClues": [1, 1, 2, 3, 3, 2, 3, 5],
 
 	"initialState": [
 		"..WFW..F",
@@ -16,10 +16,10 @@
 		"..WWW..W",
 		"...WBBBB",
 		"WWWWW...",
-		"WCCW....",
-		"WWWW....",
+		"WCCW.W.W",
+		"WWWW.W.W",
 		"......WW",
-		"......WS"
+		".W.WW.WS"
 	],
 
 	"solution": [
@@ -29,20 +29,20 @@
 		"........",
 		"....BBBB",
 		"........",
-		".CC.....",
+		".CC.C.C.",
+		"....C.C.",
 		"........",
-		"........",
-		".......S"
+		"S.S..S.S"
 	],
 	
 	"inventory": [
 		{
 			"entity": "scout",
-			"count": 1
+			"count": 4
 		},
 		{
 			"entity": "cruiser",
-			"count": 1
+			"count": 3
 		},
 		{
 			"entity": "frigate",

@@ -1,117 +1,156 @@
 function renderBoard(puzzle) {
+	const inventoryRowHeight = 45;
+	const inventoryPadding = 10;
+	const inventoryColumns = 2;
+	const clueSize = 40;
 
-    const board = document.getElementById("board");
+	const inventoryRows = Math.ceil(puzzle.inventory.length / inventoryColumns);
 
-    board.innerHTML = "";
-    
-    const canvas = document.createElement("canvas");
+	const inventoryHeight =
+		inventoryPadding * 2 + inventoryRows * inventoryRowHeight;
 
-canvas.id = "gameCanvas";
-canvas.style.touchAction = "none";
+	const availableWidth = window.innerWidth;
 
+	const cellSize = Math.floor((availableWidth - clueSize) / puzzle.width);
 
+	//canvas setup
+	const board = document.getElementById("board");
 
-    board.appendChild(canvas);
+	board.innerHTML = "";
 
-    const ctx = canvas.getContext("2d");
-    
-    
+	const canvas = document.createElement("canvas");
 
-    const clueSize = 40;
+	canvas.id = "gameCanvas";
+	canvas.style.touchAction = "none";
+	canvas.height = inventoryHeight + clueSize + puzzle.height * cellSize;
+	canvas.width = clueSize + puzzle.width * cellSize;
 
-    // Use the available screen width.
-    const availableWidth = window.innerWidth;
+	board.appendChild(canvas);
 
-    // Leave room for the row clues.
-    const cellSize = Math.floor(
-        (availableWidth - clueSize) / puzzle.width
-    );
+	const ctx = canvas.getContext("2d");
 
-    canvas.width = clueSize + puzzle.width * cellSize;
-    canvas.height = clueSize + puzzle.height * cellSize;
+	// clear canvas
+	ctx.fillStyle = "#ffffff";
+	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Background
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+	//draw inventory
+	drawInventory(ctx, puzzle, inventoryHeight);
 
-    // Grid
-    ctx.strokeStyle = "#000000";
-    ctx.lineWidth = 1;
+	//draw board grid
+	const boardTop = inventoryHeight;
+	const boardBottom = boardTop + clueSize + puzzle.height * cellSize;
 
-    for (let row = 0; row <= puzzle.height; row++) {
+	ctx.strokeStyle = "#000000";
+	ctx.lineWidth = 1;
 
-        const y = clueSize + row * cellSize;
+	for (let row = 0; row <= puzzle.height; row++) {
+		const y = boardTop + clueSize + row * cellSize;
 
-        ctx.beginPath();
-        ctx.moveTo(clueSize, y);
-        ctx.lineTo(canvas.width, y);
-        ctx.stroke();
-    }
+		ctx.beginPath();
+		ctx.moveTo(clueSize, y);
+		ctx.lineTo(canvas.width, y);
+		ctx.stroke();
+	}
 
-    for (let col = 0; col <= puzzle.width; col++) {
+	for (let col = 0; col <= puzzle.width; col++) {
+		const x = clueSize + col * cellSize;
 
-        const x = clueSize + col * cellSize;
+		ctx.beginPath();
+		ctx.moveTo(x, boardTop + clueSize);
+		ctx.lineTo(x, boardBottom);
+		ctx.stroke();
+	}
 
-        ctx.beginPath();
-        ctx.moveTo(x, clueSize);
-        ctx.lineTo(x, canvas.height);
-        ctx.stroke();
-    }
-    
-    // Draw player tiles
-for (let row = 0; row < puzzle.height; row++) {
+	// Draw player tiles
+	for (let row = 0; row < puzzle.height; row++) {
+		for (let col = 0; col < puzzle.width; col++) {
+			const tile = getTile(row, col);
 
-    for (let col = 0; col < puzzle.width; col++) {
+			const x = clueSize + col * cellSize;
+			const y = boardTop + clueSize + row * cellSize;
 
-        const tile = getTile(row, col);
+			drawTile(ctx, tile, x, y, cellSize, row, col);
+		}
+	}
 
-const x = clueSize + col * cellSize;
-const y = clueSize + row * cellSize;
+	//draw Clues
+	ctx.fillStyle = "#000000";
+	ctx.font = `${Math.floor(cellSize * 0.45)}px sans-serif`;
+	ctx.textAlign = "center";
+	ctx.textBaseline = "middle";
 
-drawTile(
-    ctx,
-    tile,
-    x,
-    y,
-    cellSize,
-    row,
-    col
-);
-    }
+	// Row clues
+	for (let row = 0; row < puzzle.height; row++) {
+		const y = boardTop + clueSize + row * cellSize + cellSize / 2;
+
+		ctx.fillText(puzzle.rowClues[row], clueSize / 2, y);
+	}
+
+	// Column clues
+	for (let col = 0; col < puzzle.width; col++) {
+		const x = clueSize + col * cellSize + cellSize / 2;
+
+		const y = boardTop + clueSize / 2;
+
+		ctx.fillText(puzzle.colClues[col], x, y);
+	}
+
+	setupInput(canvas, puzzle, inventoryHeight);
 }
-    
-     
 
+function drawInventory(ctx, puzzle, inventoryHeight) {
+	const columnWidth = ctx.canvas.width / 2;
 
-    // Clues
-    ctx.fillStyle = "#000000";
-    ctx.font = `${Math.floor(cellSize * 0.45)}px sans-serif`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+	for (let i = 0; i < puzzle.inventory.length; i++) {
+		const item = puzzle.inventory[i];
 
-    // Row clues
-    for (let row = 0; row < puzzle.height; row++) {
+		const column = i % 2;
+		const row = Math.floor(i / 2);
 
-        const y = clueSize + row * cellSize + cellSize / 2;
+		const x = column * columnWidth;
 
-        ctx.fillText(
-            puzzle.rowClues[row],
-            clueSize / 2,
-            y
-        );
-    }
+		const y = 10 + row * 45;
 
-    // Column clues
-    for (let col = 0; col < puzzle.width; col++) {
+		drawInventoryItem(ctx, puzzle, item, x, y, columnWidth, i);
+	}
+}
 
-        const x = clueSize + col * cellSize + cellSize / 2;
+function drawInventoryItem(ctx, puzzle, item, x, y, width, index) {
+	const state = inventoryState[index];
 
-        ctx.fillText(
-            puzzle.colClues[col],
-            x,
-            clueSize / 2
-        );
-    }
-    
-    setupInput(canvas, puzzle);
+	const definition = item.definition;
+
+	ctx.font = "20px sans-serif";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "middle";
+	ctx.fillStyle = "#000000";
+
+	ctx.fillText(definition.symbol, x + 10, y + 20);
+
+	for (let i = 0; i < item.count; i++) {
+		const checked = i < state.completed;
+
+		const checkX = x + 45 + i * 28;
+
+		drawInventoryCheck(ctx, checkX, y + 20, checked);
+	}
+}
+
+function drawInventoryCheck(ctx, x, y, checked) {
+	const size = 18;
+
+	ctx.strokeStyle = "#000000";
+	ctx.lineWidth = 2;
+
+	ctx.strokeRect(x - size / 2, y - size / 2, size, size);
+
+	if (checked) {
+		ctx.beginPath();
+
+		ctx.moveTo(x - 5, y);
+		ctx.lineTo(x - 1, y + 4);
+		ctx.lineTo(x + 6, y - 5);
+
+		ctx.stroke();
+	}
 }

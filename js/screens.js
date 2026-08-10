@@ -35,9 +35,14 @@ function showWinScreen() {
     overlay.innerHTML = winScreenHTML();
 
     gameScreen.appendChild(overlay);
-    
-    document
-        .getElementById("nextPuzzleButton")
-        .onclick = nextPuzzle;
 
+    const nextButton =
+        document.getElementById("nextPuzzleButton");
+
+    if (currentPuzzleIndex >= puzzleIndex.length - 1) {
+        nextButton.style.display = "none";
+    }
+    else {
+        nextButton.onclick = nextPuzzle;
+    }
 }
