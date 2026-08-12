@@ -18,13 +18,11 @@ function createInventory(puzzle) {
 function updateInventory(puzzle) {
 	const result = detectMicroBattleShips();
 
-for (const item of inventoryState) {
-	item.completed = result.counts[item.entity] || 0;
-}
+	for (const item of inventoryState) {
+		item.completed = result.counts[item.entity] || 0;
+	}
 
-recognizedShips = result.recognizedShips;
-
-inventorySatisfied = isInventorySatisfied(puzzle);
+	recognizedShips = result.recognizedShips;
 
 	inventorySatisfied = isInventorySatisfied(puzzle);
 }
