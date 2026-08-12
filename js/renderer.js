@@ -102,16 +102,21 @@ function renderBoard(puzzle) {
 	const inventoryColumns = 2;
 	const clueSize = 40;
 
-	const inventoryRows = Math.ceil(puzzle.inventory.length / inventoryColumns);
+	const inventoryRows = Math.ceil(
+		puzzle.inventory.length / inventoryColumns
+	);
 
 	const inventoryHeight =
-		inventoryPadding * 2 + inventoryRows * inventoryRowHeight;
+		inventoryPadding * 2 +
+		inventoryRows * inventoryRowHeight;
 
 	const availableWidth = window.innerWidth;
 
-	const cellSize = Math.floor((availableWidth - clueSize) / puzzle.width);
+	const cellSize = Math.floor(
+		(availableWidth - clueSize) / puzzle.width
+	);
 
-	//canvas setup
+	// Canvas setup
 	const board = document.getElementById("board");
 
 	board.innerHTML = "";
@@ -120,80 +125,178 @@ function renderBoard(puzzle) {
 
 	canvas.id = "gameCanvas";
 	canvas.style.touchAction = "none";
-	canvas.height = inventoryHeight + clueSize + puzzle.height * cellSize;
-	canvas.width = clueSize + puzzle.width * cellSize;
+
+	canvas.height =
+		inventoryHeight +
+		clueSize +
+		puzzle.height * cellSize;
+
+	canvas.width =
+		clueSize +
+		puzzle.width * cellSize;
 
 	board.appendChild(canvas);
 
 	const ctx = canvas.getContext("2d");
 
-	// clear canvas
+	// Clear canvas
 	ctx.fillStyle = "#ffffff";
-	ctx.fillRect(0, 0, canvas.width, canvas.height);
+	ctx.fillRect(
+		0,
+		0,
+		canvas.width,
+		canvas.height
+	);
 
-	//draw inventory
-	drawInventory(ctx, puzzle, inventoryHeight);
+	// Draw inventory
+	drawInventory(
+		ctx,
+		puzzle,
+		inventoryHeight
+	);
 
-	//draw board grid
+	// Board geometry
 	const boardTop = inventoryHeight;
-	const boardBottom = boardTop + clueSize + puzzle.height * cellSize;
+
+	const boardBottom =
+		boardTop +
+		clueSize +
+		puzzle.height * cellSize;
+
+	// ------------------------------------------------
+	// Draw player tiles FIRST
+	// ------------------------------------------------
+
+	for (let row = 0; row < puzzle.height; row++) {
+		for (let col = 0; col < puzzle.width; col++) {
+
+			const tile = getTile(row, col);
+
+			const x =
+				clueSize +
+				col * cellSize;
+
+			const y =
+				boardTop +
+				clueSize +
+				row * cellSize;
+
+			drawTile(
+				ctx,
+				tile,
+				x,
+				y,
+				cellSize,
+				row,
+				col
+			);
+		}
+	}
+
+	// ------------------------------------------------
+	// Draw grid ON TOP of tiles
+	// ------------------------------------------------
 
 	ctx.strokeStyle = "#000000";
 	ctx.lineWidth = 1;
 
+	// Horizontal lines
 	for (let row = 0; row <= puzzle.height; row++) {
-		const y = boardTop + clueSize + row * cellSize;
+
+		const y =
+			boardTop +
+			clueSize +
+			row * cellSize;
 
 		ctx.beginPath();
-		ctx.moveTo(clueSize, y);
-		ctx.lineTo(canvas.width, y);
+
+		ctx.moveTo(
+			clueSize,
+			y
+		);
+
+		ctx.lineTo(
+			canvas.width,
+			y
+		);
+
 		ctx.stroke();
 	}
 
+	// Vertical lines
 	for (let col = 0; col <= puzzle.width; col++) {
-		const x = clueSize + col * cellSize;
+
+		const x =
+			clueSize +
+			col * cellSize;
 
 		ctx.beginPath();
-		ctx.moveTo(x, boardTop + clueSize);
-		ctx.lineTo(x, boardBottom);
+
+		ctx.moveTo(
+			x,
+			boardTop + clueSize
+		);
+
+		ctx.lineTo(
+			x,
+			boardBottom
+		);
+
 		ctx.stroke();
 	}
 
-	// Draw player tiles
-	for (let row = 0; row < puzzle.height; row++) {
-		for (let col = 0; col < puzzle.width; col++) {
-			const tile = getTile(row, col);
+	// ------------------------------------------------
+	// Draw clues
+	// ------------------------------------------------
 
-			const x = clueSize + col * cellSize;
-			const y = boardTop + clueSize + row * cellSize;
-
-			drawTile(ctx, tile, x, y, cellSize, row, col);
-		}
-	}
-
-	//draw Clues
 	ctx.fillStyle = "#000000";
-	ctx.font = `${Math.floor(cellSize * 0.45)}px sans-serif`;
+
+	ctx.font =
+		`${Math.floor(cellSize * 0.45)}px sans-serif`;
+
 	ctx.textAlign = "center";
 	ctx.textBaseline = "middle";
 
 	// Row clues
 	for (let row = 0; row < puzzle.height; row++) {
-		const y = boardTop + clueSize + row * cellSize + cellSize / 2;
 
-		ctx.fillText(puzzle.rowClues[row], clueSize / 2, y);
+		const y =
+			boardTop +
+			clueSize +
+			row * cellSize +
+			cellSize / 2;
+
+		ctx.fillText(
+			puzzle.rowClues[row],
+			clueSize / 2,
+			y
+		);
 	}
 
 	// Column clues
 	for (let col = 0; col < puzzle.width; col++) {
-		const x = clueSize + col * cellSize + cellSize / 2;
 
-		const y = boardTop + clueSize / 2;
+		const x =
+			clueSize +
+			col * cellSize +
+			cellSize / 2;
 
-		ctx.fillText(puzzle.colClues[col], x, y);
+		const y =
+			boardTop +
+			clueSize / 2;
+
+		ctx.fillText(
+			puzzle.colClues[col],
+			x,
+			y
+		);
 	}
 
-	setupInput(canvas, puzzle, inventoryHeight);
+	setupInput(
+		canvas,
+		puzzle,
+		inventoryHeight
+	);
 }
 
 function drawInventory(ctx, puzzle, inventoryHeight) {
