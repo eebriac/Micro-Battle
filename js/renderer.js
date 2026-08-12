@@ -7,7 +7,12 @@ const spriteImages = {
 	ship_top_s: new Image(),
 	ship_mid_s: new Image(),
 	ship_end_s: new Image(),
-	ship_unk_s: new Image()
+	ship_unk_s: new Image(),
+
+	ship_1: new Image(),
+	ship_top: new Image(),
+	ship_mid: new Image(),
+	ship_end: new Image()
 };
 
 const inventorySprites = {
@@ -69,6 +74,26 @@ loadSprite(
 loadSprite(
 	spriteImages.ship_unk_s,
 	"assets/sprites/microbes/ship/ship_unk_s.png"
+);
+
+loadSprite(
+	spriteImages.ship_1,
+	"assets/sprites/microbes/ship/ship_1.png"
+);
+
+loadSprite(
+	spriteImages.ship_top,
+	"assets/sprites/microbes/ship/ship_top.png"
+);
+
+loadSprite(
+	spriteImages.ship_mid,
+	"assets/sprites/microbes/ship/ship_mid.png"
+);
+
+loadSprite(
+	spriteImages.ship_end,
+	"assets/sprites/microbes/ship/ship_end.png"
 );
 
 function renderBoard(puzzle) {
