@@ -1,4 +1,5 @@
 let inventoryState = [];
+let recognizedShips = [];
 
 function createInventory(puzzle) {
 	inventoryState = [];
@@ -15,11 +16,15 @@ function createInventory(puzzle) {
 }
 
 function updateInventory(puzzle) {
-	const ships = detectMicroBattleShips();
+	const result = detectMicroBattleShips();
 
-	for (const item of inventoryState) {
-		item.completed = ships[item.entity] || 0;
-	}
+for (const item of inventoryState) {
+	item.completed = result.counts[item.entity] || 0;
+}
+
+recognizedShips = result.recognizedShips;
+
+inventorySatisfied = isInventorySatisfied(puzzle);
 
 	inventorySatisfied = isInventorySatisfied(puzzle);
 }
@@ -28,32 +33,61 @@ function detectMicroBattleShips() {
 	const used = Array.from({ length: playerBoard.length }, () =>
 		Array(playerBoard[0].length).fill(false)
 	);
+
 	const ships = {
 		battleship: 0,
 		frigate: 0,
 		cruiser: 0,
 		scout: 0,
 	};
+
+	const recognizedShips = [];
+
 	const sizes = [
 		{ entity: "battleship", size: 4 },
 		{ entity: "frigate", size: 3 },
 		{ entity: "cruiser", size: 2 },
 	];
+
 	for (const ship of sizes) {
 		for (let row = 0; row < playerBoard.length; row++) {
 			for (let col = 0; col < playerBoard[row].length; col++) {
 				if (canPlaceShip(row, col, ship.size, "horizontal", used)) {
+					const cells = getShipCells(
+						row,
+						col,
+						ship.size,
+						"horizontal"
+					);
+
 					markShip(row, col, ship.size, "horizontal", used);
+
 					ships[ship.entity]++;
+
+					recognizedShips.push({
+						entity: ship.entity,
+						cells: cells,
+						direction: "horizontal",
+					});
 				} else if (
 					canPlaceShip(row, col, ship.size, "vertical", used)
 				) {
+					const cells = getShipCells(row, col, ship.size, "vertical");
+
 					markShip(row, col, ship.size, "vertical", used);
+
 					ships[ship.entity]++;
+
+					recognizedShips.push({
+						entity: ship.entity,
+						cells: cells,
+						direction: "vertical",
+					});
 				}
 			}
 		}
 	}
+
 	// Remaining isolated cells are Scouts.
 	for (let row = 0; row < playerBoard.length; row++) {
 		for (let col = 0; col < playerBoard[row].length; col++) {
@@ -63,10 +97,33 @@ function detectMicroBattleShips() {
 				scoutIsComplete(row, col)
 			) {
 				ships.scout++;
+
+				recognizedShips.push({
+					entity: "scout",
+					cells: [{ row: row, col: col }],
+					direction: "vertical",
+				});
 			}
 		}
 	}
-	return ships;
+
+	return {
+		counts: ships,
+		recognizedShips: recognizedShips,
+	};
+}
+
+function getShipCells(row, col, size, direction) {
+	const cells = [];
+
+	for (let i = 0; i < size; i++) {
+		cells.push({
+			row: direction === "vertical" ? row + i : row,
+			col: direction === "horizontal" ? col + i : col,
+		});
+	}
+
+	return cells;
 }
 
 function canPlaceShip(row, col, size, direction, used) {
