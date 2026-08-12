@@ -1,3 +1,51 @@
+const spriteImages = {
+	ship_1_s: new Image(),
+	ship_2_s: new Image(),
+	ship_3_s: new Image(),
+	ship_4_s: new Image()
+};
+
+const inventorySprites = {
+	scout: spriteImages.ship_1_s,
+	cruiser: spriteImages.ship_2_s,
+	frigate: spriteImages.ship_3_s,
+	battleship: spriteImages.ship_4_s
+};
+
+function loadSprite(image, src) {
+	image.onload = () => {
+		if (puzzle) {
+			renderBoard(puzzle);
+		}
+	};
+
+	image.onerror = () => {
+		console.error(`Failed to load sprite: ${src}`);
+	};
+
+	image.src = src;
+}
+
+loadSprite(
+	spriteImages.ship_1_s,
+	"assets/sprites/microbes/ship/ship_1_s.png"
+);
+
+loadSprite(
+	spriteImages.ship_2_s,
+	"assets/sprites/microbes/ship/ship_2_s.png"
+);
+
+loadSprite(
+	spriteImages.ship_3_s,
+	"assets/sprites/microbes/ship/ship_3_s.png"
+);
+
+loadSprite(
+	spriteImages.ship_4_s,
+	"assets/sprites/microbes/ship/ship_4_s.png"
+);
+
 function renderBoard(puzzle) {
 	const inventoryRowHeight = 45;
 	const inventoryPadding = 10;
@@ -118,21 +166,50 @@ function drawInventory(ctx, puzzle, inventoryHeight) {
 function drawInventoryItem(ctx, puzzle, item, x, y, width, index) {
 	const state = inventoryState[index];
 
-	const definition = item.definition;
+	const sprite = inventorySprites[item.entity];
 
-	ctx.font = "20px sans-serif";
-	ctx.textAlign = "left";
-	ctx.textBaseline = "middle";
-	ctx.fillStyle = "#000000";
+	if (!sprite) {
+		console.warn(`No inventory sprite found for ${item.entity}`);
+		return;
+	}
 
-	ctx.fillText(definition.symbol, x + 10, y + 20);
+	// Height of the sprite within the inventory row
+	const spriteHeight = 30;
+
+	// Preserve the original image aspect ratio
+	const spriteWidth =
+		sprite.naturalWidth > 0
+			? sprite.naturalWidth * (spriteHeight / sprite.naturalHeight)
+			: spriteHeight;
+
+	const spriteX = x + 10;
+	const spriteY = y + (45 - spriteHeight) / 2;
+
+	// Draw the gray silhouette
+	if (sprite.complete && sprite.naturalWidth > 0) {
+		ctx.drawImage(
+			sprite,
+			spriteX,
+			spriteY,
+			spriteWidth,
+			spriteHeight
+		);
+	}
+
+	// Checkboxes appear immediately after the silhouette
+	const checkStartX = spriteX + spriteWidth + 12;
 
 	for (let i = 0; i < item.count; i++) {
 		const checked = i < state.completed;
 
-		const checkX = x + 45 + i * 28;
+		const checkX = checkStartX + i * 28;
 
-		drawInventoryCheck(ctx, checkX, y + 20, checked);
+		drawInventoryCheck(
+			ctx,
+			checkX,
+			y + 20,
+			checked
+		);
 	}
 }
 
