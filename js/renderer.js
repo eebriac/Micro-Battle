@@ -24,7 +24,9 @@ const inventorySprites = {
 
 function loadSprite(image, src) {
 	image.onload = () => {
-		if (puzzle) {
+		const board = document.getElementById("board");
+
+		if (puzzle && board) {
 			renderBoard(puzzle);
 		}
 	};
@@ -245,23 +247,12 @@ function drawInventoryItem(ctx, puzzle, item, x, y, width, index) {
 
 	// Draw the gray silhouette
 	if (sprite.complete && sprite.naturalWidth > 0) {
-		ctx.drawImage(
-			sprite,
-			spriteX,
-			spriteY,
-			spriteWidth,
-			spriteHeight
-		);
+		ctx.drawImage(sprite, spriteX, spriteY, spriteWidth, spriteHeight);
 	}
 
 	// Red X if too many ships of this type have been recognized.
 	if (isInventoryItemOverLimit(item)) {
-		drawInvalidX(
-			ctx,
-			spriteX,
-			spriteY,
-			spriteHeight
-		);
+		drawInvalidX(ctx, spriteX, spriteY, spriteHeight);
 	}
 
 	// Checkboxes appear immediately after the silhouette.
@@ -272,18 +263,13 @@ function drawInventoryItem(ctx, puzzle, item, x, y, width, index) {
 
 		const checkX = checkStartX + i * 28;
 
-		drawInventoryCheck(
-			ctx,
-			checkX,
-			y + 20,
-			checked
-		);
+		drawInventoryCheck(ctx, checkX, y + 20, checked);
 	}
 }
 
 function isInventoryItemOverLimit(item) {
 	const count = recognizedShips.filter(
-		ship => ship.entity === item.entity
+		(ship) => ship.entity === item.entity
 	).length;
 
 	return count > item.count;

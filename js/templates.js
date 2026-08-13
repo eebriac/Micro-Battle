@@ -1,14 +1,19 @@
 function titleScreenHTML() {
 
-    return `
-        <div class="titleScreen">
-            <h1>Micro-battle🦠</h1>
+	return `
+		<div class="titleScreen">
+			<h1>Micro-battle🦠</h1>
 
-            <button id="startButton">
-                Start Puzzle
-            </button>
-        </div>
-    `;
+			<button id="startButton">
+				Start Puzzle
+			</button>
+			<br/><br/>
+
+			<button id="builderButton">
+				Puzzle Builder
+			</button>
+		</div>
+	`;
 }
 
 
@@ -53,6 +58,31 @@ function winScreenHTML() {
             <button id="nextPuzzleButton">
                 Next Puzzle
             </button>
+        </div>
+    `;
+}
+
+function builderScreenHTML() {
+
+    return `
+        <div id="builderScreen">
+
+            <h2>Puzzle Builder</h2>
+
+            <div id="builderBoard"></div>
+
+            <div id="builderControls">
+
+                <button id="builderClearButton">
+                    Clear
+                </button>
+
+                <button id="builderBackButton">
+                    Back
+                </button>
+
+            </div>
+
         </div>
     `;
 }

@@ -125,6 +125,7 @@ function completePuzzle(puzzle) {
 			}
 		}
 	}
+    updateInventory(puzzle);
 
 	gameWon = true;
 }

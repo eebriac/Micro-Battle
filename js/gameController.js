@@ -73,21 +73,19 @@ function updateHistoryButtons() {
 }
 
 function isPuzzleSolved(puzzle) {
-	if (!inventorySatisfied) {
-		return false;
-	}
 
 	for (let row = 0; row < puzzle.height; row++) {
 		for (let col = 0; col < puzzle.width; col++) {
-			const solutionTile = puzzle.solution[row][col];
 
+			const solutionTile = puzzle.solution[row][col];
 			const playerTile = getTile(row, col);
 
-			const solutionOccupied = solutionTile !== EMPTY;
+			const solutionOccupied =
+				solutionTile !== EMPTY;
 
-			const playerOccupied = playerTile !== EMPTY && playerTile !== WATER;
-
-			// Occupied/empty pattern must match.
+			const playerOccupied =
+				playerTile !== EMPTY &&
+				playerTile !== WATER;
 
 			if (solutionOccupied !== playerOccupied) {
 				return false;

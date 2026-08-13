@@ -7,6 +7,10 @@ function showTitleScreen() {
     document
         .getElementById("startButton")
         .onclick = showGameScreen;
+
+    document
+        .getElementById("builderButton")
+        .onclick = showBuilderScreen;
 }
 
 
@@ -45,4 +49,15 @@ function showWinScreen() {
     else {
         nextButton.onclick = nextPuzzle;
     }
+}
+
+function showBuilderScreen() {
+
+    const app = document.getElementById("app");
+
+    app.innerHTML = builderScreenHTML();
+
+    initPuzzleBuilder();
+
+    setupBuilderControls();
 }
