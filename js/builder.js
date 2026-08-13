@@ -1,22 +1,51 @@
-let builderBoard = [];
+let solutionBoard = [];
+let initialStateBoard = [];
+
+let builderMode = "solution";
+
+function getBuilderBoard() {
+    return builderMode === "solution"
+        ? solutionBoard
+        : initialStateBoard;
+}
 
 const builderWidth = 8;
 const builderHeight = 10;
 
+function toggleBuilderMode() {
+
+    if (builderMode === "solution") {
+        builderMode = "initial";
+    }
+    else {
+        builderMode = "solution";
+    }
+
+    renderBuilder();
+}
+
 
 function initPuzzleBuilder() {
 
-	builderBoard = Array.from(
-		{ length: builderHeight },
-		() => Array(builderWidth).fill(EMPTY)
-	);
+    solutionBoard = Array.from(
+        { length: builderHeight },
+        () => Array(builderWidth).fill(WATER)
+    );
 
-	renderBuilder();
+    initialStateBoard = Array.from(
+        { length: builderHeight },
+        () => Array(builderWidth).fill(EMPTY)
+    );
 
-	setupBuilderInput();
+    builderMode = "solution";
+
+    renderBuilder();
 }
 
 function setupBuilderControls() {
+    document
+        .getElementById("builderModeButton")
+        .onclick = toggleBuilderMode;
 
     document
         .getElementById("builderBackButton")
@@ -93,25 +122,23 @@ function setupBuilderInput() {
 
 function cycleBuilderTile(row, col) {
 
-	const current =
-		builderBoard[row][col];
+    const board = getBuilderBoard();
 
+    const current = board[row][col];
 
-	if (current === EMPTY) {
+    if (current === EMPTY) {
+        board[row][col] = WATER;
+    }
+    if (current === SHIP) {
+        if (builderMode === "solution"){
+            board[row][col] = WATER;
+        } else {
+            board[row][col] = EMPTY;
+        }
+    }
+    else {
+        board[row][col] = SHIP;
+    }
 
-		builderBoard[row][col] = "S";
-
-	}
-	else if (current === "S") {
-
-		builderBoard[row][col] = WATER;
-
-	}
-	else {
-
-		builderBoard[row][col] = EMPTY;
-	}
-
-
-	renderBuilder();
+    renderBuilder();
 }

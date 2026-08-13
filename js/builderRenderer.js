@@ -1,3 +1,13 @@
+const modeButton =
+    document.getElementById("builderModeButton");
+
+if (modeButton) {
+    modeButton.textContent =
+        builderMode === "solution"
+            ? "Solution"
+            : "Initial State";
+}
+
 function renderBuilder() {
 
 	const container =
@@ -90,6 +100,8 @@ function renderBuilder() {
 		cellSize,
 		clueSize
 	);
+	
+	setupBuilderInput();
 }
 
 

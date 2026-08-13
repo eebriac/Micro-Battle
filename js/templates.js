@@ -1,5 +1,4 @@
 function titleScreenHTML() {
-
 	return `
 		<div class="titleScreen">
 			<h1>Micro-battle🦠</h1>
@@ -16,10 +15,8 @@ function titleScreenHTML() {
 	`;
 }
 
-
 function gameScreenHTML() {
-
-    return `
+	return `
         <div id="gameScreen">
 
             <div id="board"></div>
@@ -48,10 +45,8 @@ function gameScreenHTML() {
     `;
 }
 
-
 function winScreenHTML() {
-
-    return `
+	return `
         <div id="winMessage">
             <h2>🦠Complete!🦠</h2>
 
@@ -63,11 +58,14 @@ function winScreenHTML() {
 }
 
 function builderScreenHTML() {
-
-    return `
+	return `
         <div id="builderScreen">
 
             <h2>Puzzle Builder</h2>
+			
+			<button id="builderModeButton">
+    Solution
+</button>
 
             <div id="builderBoard"></div>
 
