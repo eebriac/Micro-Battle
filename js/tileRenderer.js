@@ -87,7 +87,7 @@ function drawWaterTile(ctx, x, y, size) {
 }
 
 function drawShipTile(ctx, x, y, size, row, col) {
-	const tile = getTile(row, col);
+	const tile = activeBoard[row][col];
 
 	// Is this cell part of a ship that the inventory
 	// has recognized as complete?
@@ -369,5 +369,5 @@ function isWater(row, col) {
 		return false;
 	}
 
-	return getTile(row, col) === WATER;
+	return activeBoard[row][col] === WATER;
 }

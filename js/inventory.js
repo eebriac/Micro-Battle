@@ -28,8 +28,8 @@ function updateInventory(puzzle) {
 }
 
 function detectMicroBattleShips() {
-	const used = Array.from({ length: playerBoard.length }, () =>
-		Array(playerBoard[0].length).fill(false)
+	const used = Array.from({ length: activeBoard.length }, () =>
+		Array(activeBoard[0].length).fill(false)
 	);
 
 	const ships = {
@@ -48,8 +48,8 @@ function detectMicroBattleShips() {
 	];
 
 	for (const ship of sizes) {
-		for (let row = 0; row < playerBoard.length; row++) {
-			for (let col = 0; col < playerBoard[row].length; col++) {
+		for (let row = 0; row < activeBoard.length; row++) {
+			for (let col = 0; col < activeBoard[row].length; col++) {
 				if (canPlaceShip(row, col, ship.size, "horizontal", used)) {
 					const cells = getShipCells(
 						row,
@@ -87,8 +87,8 @@ function detectMicroBattleShips() {
 	}
 
 	// Remaining isolated cells are Scouts.
-	for (let row = 0; row < playerBoard.length; row++) {
-		for (let col = 0; col < playerBoard[row].length; col++) {
+	for (let row = 0; row < activeBoard.length; row++) {
+		for (let col = 0; col < activeBoard[row].length; col++) {
 			if (
 				isShipCell(row, col) &&
 				!used[row][col] &&
@@ -132,9 +132,9 @@ function canPlaceShip(row, col, size, direction, used) {
 		// Outside board.
 		if (
 			r < 0 ||
-			r >= playerBoard.length ||
+			r >= activeBoard.length ||
 			c < 0 ||
-			c >= playerBoard[0].length
+			c >= activeBoard[0].length
 		) {
 			return false;
 		}
@@ -198,18 +198,18 @@ function scoutIsComplete(row, col) {
 function isWaterOrEdge(row, col) {
 	if (
 		row < 0 ||
-		row >= playerBoard.length ||
+		row >= activeBoard.length ||
 		col < 0 ||
-		col >= playerBoard[0].length
+		col >= activeBoard[0].length
 	) {
 		return true;
 	}
 
-	return playerBoard[row][col] === WATER;
+	return activeBoard[row][col] === WATER;
 }
 
 function isShipCell(row, col) {
-	const tile = playerBoard[row][col];
+	const tile = activeBoard[row][col];
 
 	return tile !== EMPTY && tile !== WATER;
 }

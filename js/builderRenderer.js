@@ -49,21 +49,27 @@ function renderBuilder() {
 }
 
 function drawBuilderTile(ctx, tile, x, y, size) {
-	if (tile === WATER) {
-		drawWaterTile(ctx, x, y, size);
+    if (tile === EMPTY) {
+        return;
+    }
 
-		return;
-	}
+    if (tile === WATER) {
+        drawWaterTile(ctx, x, y, size);
+        return;
+    }
 
-	if (tile !== EMPTY) {
-		drawBuilderShip(ctx, x, y, size);
-	}
+    drawBuilderShip(ctx, x, y, size);
 }
 
 function drawBuilderShip(ctx, x, y, size) {
-	ctx.fillStyle = "#555555";
-
-	ctx.fillRect(x + 2, y + 2, size - 4, size - 4);
+    drawShipSprite(
+        ctx,
+        spriteImages.ship_unk_s,
+        x,
+        y,
+        size,
+        "vertical"
+    );
 }
 
 function drawBuilderGrid(ctx, canvas, cellSize, clueSize) {

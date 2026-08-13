@@ -27,6 +27,8 @@ function createPlayerBoard(puzzle) {
         playerBoard.push(newRow);
     }
 
+    activeBoard = playerBoard;
+
     undoStack = [];
     redoStack = [];
 
@@ -40,16 +42,17 @@ function isInitialTile(puzzle, row, col) {
 	return puzzle.initialState[row][col] !== EMPTY;
 }
 
-function getTile(row, col) {
-	if (!playerBoard[row]) {
-		return EMPTY;
-	}
 
-	return playerBoard[row][col] ?? EMPTY;
+function getTile(row, col) {
+    if (!activeBoard || !activeBoard[row]) {
+        return EMPTY;
+    }
+
+    return activeBoard[row][col] ?? EMPTY;
 }
 
 function setTile(row, col, tile) {
-	playerBoard[row][col] = tile;
+    activeBoard[row][col] = tile;
 }
 
 function makeMove(row, col) {
@@ -83,31 +86,35 @@ function canRedo() {
 }
 
 function undoMove() {
-	if (undoStack.length === 0) {
-		return false;
-	}
+    if (undoStack.length === 0) {
+        return false;
+    }
 
-	redoStack.push(copyBoard(playerBoard));
+    redoStack.push(copyBoard(playerBoard));
 
-	playerBoard = undoStack.pop();
+    playerBoard = undoStack.pop();
 
-	updateInventory(puzzle);
+    activeBoard = playerBoard;
 
-	return true;
+    updateInventory(puzzle);
+
+    return true;
 }
 
 function redoMove() {
-	if (redoStack.length === 0) {
-		return false;
-	}
+    if (redoStack.length === 0) {
+        return false;
+    }
 
-	undoStack.push(copyBoard(playerBoard));
+    undoStack.push(copyBoard(playerBoard));
 
-	playerBoard = redoStack.pop();
+    playerBoard = redoStack.pop();
 
-	updateInventory(puzzle);
+    activeBoard = playerBoard;
 
-	return true;
+    updateInventory(puzzle);
+
+    return true;
 }
 
 function copyBoard(board) {

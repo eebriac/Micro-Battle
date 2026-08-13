@@ -15,8 +15,6 @@ function showGameScreen() {
 
 	createPlayerBoard(puzzle);
 
-	activeBoard = playerBoard;
-
 	setupGameControls();
 
 	updateGame(puzzle);
