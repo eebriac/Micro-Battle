@@ -1,3 +1,4 @@
+let builderBoard = [];
 let solutionBoard = [];
 let initialStateBoard = [];
 
@@ -12,13 +13,24 @@ function getBuilderBoard() {
 const builderWidth = 8;
 const builderHeight = 10;
 
+const modeButton = document.getElementById("builderModeButton");
+
+if (modeButton) {
+    modeButton.textContent =
+        builderMode === "solution"
+            ? "Solution"
+            : "Initial State";
+}
+
 function toggleBuilderMode() {
 
     if (builderMode === "solution") {
         builderMode = "initial";
+        builderBoard = initialStateBoard;
     }
     else {
         builderMode = "solution";
+        builderBoard = solutionBoard;
     }
 
     renderBuilder();
@@ -38,6 +50,8 @@ function initPuzzleBuilder() {
     );
 
     builderMode = "solution";
+    
+    builderBoard = solutionBoard;
 
     renderBuilder();
 }
