@@ -4,164 +4,124 @@ let initialStateBoard = [];
 let builderMode = "solution";
 
 function getBuilderBoard() {
-    return builderMode === "solution"
-        ? solutionBoard
-        : initialStateBoard;
+	return builderMode === "solution" ? solutionBoard : initialStateBoard;
 }
 
 const builderWidth = 8;
-const builderHeight = 10; 
+const builderHeight = 10;
 
 function toggleBuilderMode() {
+	if (builderMode === "solution") {
+		builderMode = "initial";
+	} else {
+		builderMode = "solution";
+	}
 
-    if (builderMode === "solution") {
-        builderMode = "initial";
-    }
-    else {
-        builderMode = "solution";
-    }
+	activeBoard = getBuilderBoard();
+	recognizeShips();
 
-    const button =
-        document.getElementById("builderModeButton");
+	const button = document.getElementById("builderModeButton");
 
-    if (button) {
-        button.textContent =
-            builderMode === "solution"
-                ? "Solution"
-                : "Initial State";
-    }
+	if (button) {
+		button.textContent =
+			builderMode === "solution" ? "Solution" : "Initial State";
+	}
 
-    renderBuilder();
+	renderBuilder();
 }
 
-
 function initPuzzleBuilder() {
+	solutionBoard = Array.from({ length: builderHeight }, () =>
+		Array(builderWidth).fill(WATER)
+	);
 
-    solutionBoard = Array.from(
-        { length: builderHeight },
-        () => Array(builderWidth).fill(WATER)
-    );
+	initialStateBoard = Array.from({ length: builderHeight }, () =>
+		Array(builderWidth).fill(EMPTY)
+	);
 
-    initialStateBoard = Array.from(
-        { length: builderHeight },
-        () => Array(builderWidth).fill(EMPTY)
-    );
+	builderMode = "solution";
+	activeBoard = getBuilderBoard();
 
-    builderMode = "solution";
-    activeBoard = getBuilderBoard(); 
-
-    renderBuilder();
+	renderBuilder();
 }
 
 function setupBuilderControls() {
-    document
-        .getElementById("builderModeButton")
-        .onclick = toggleBuilderMode;
+	document.getElementById("builderModeButton").onclick = toggleBuilderMode;
 
-    document
-        .getElementById("builderBackButton")
-        .onclick = showTitleScreen;
+	document.getElementById("builderBackButton").onclick = showTitleScreen;
 
-    document
-        .getElementById("builderClearButton")
-        .onclick = clearBuilder;
+	document.getElementById("builderClearButton").onclick = clearBuilder;
 }
 
 function clearBuilder() {
+	const board = getBuilderBoard();
 
-    const board = getBuilderBoard();
+	const clearValue = builderMode === "solution" ? WATER : EMPTY;
 
-    const clearValue =
-        builderMode === "solution"
-            ? WATER
-            : EMPTY;
+	for (let row = 0; row < builderHeight; row++) {
+		for (let col = 0; col < builderWidth; col++) {
+			board[row][col] = clearValue;
+		}
+	}
 
-    for (let row = 0; row < builderHeight; row++) {
-        for (let col = 0; col < builderWidth; col++) {
-            board[row][col] = clearValue;
-        }
-    }
+	activeBoard = board;
+	recognizeShips();
 
-    renderBuilder();
+	renderBuilder();
 }
-
 
 function setupBuilderInput() {
+	const canvas = document.getElementById("builderCanvas");
 
-	const canvas =
-		document.getElementById("builderCanvas");
+	canvas.addEventListener("pointerdown", function (event) {
+		const rect = canvas.getBoundingClientRect();
 
-	canvas.addEventListener(
-		"pointerdown",
-		function (event) {
+		const clueSize = 40;
 
-			const rect =
-				canvas.getBoundingClientRect();
+		const cellSize = (canvas.width - clueSize) / builderWidth;
 
-			const clueSize = 40;
+		const x = event.clientX - rect.left - clueSize;
 
-			const cellSize =
-				(canvas.width - clueSize) /
-				builderWidth;
+		const y = event.clientY - rect.top - clueSize;
 
-			const x =
-				event.clientX -
-				rect.left -
-				clueSize;
+		const col = Math.floor(x / cellSize);
 
-			const y =
-				event.clientY -
-				rect.top -
-				clueSize;
+		const row = Math.floor(y / cellSize);
 
-			const col =
-				Math.floor(x / cellSize);
+		// Ignore taps outside grid.
 
-			const row =
-				Math.floor(y / cellSize);
-
-
-			// Ignore taps outside grid.
-
-			if (
-				row < 0 ||
-				row >= builderHeight ||
-				col < 0 ||
-				col >= builderWidth
-			) {
-				return;
-			}
-
-
-			cycleBuilderTile(row, col);
+		if (row < 0 || row >= builderHeight || col < 0 || col >= builderWidth) {
+			return;
 		}
-	);
+
+		cycleBuilderTile(row, col);
+	});
 }
 
-
 function cycleBuilderTile(row, col) {
+	const board = getBuilderBoard();
 
-    const board = getBuilderBoard();
-    const current = board[row][col];
+	const current = board[row][col];
 
-    if (builderMode === "solution") {
+	if (builderMode === "solution") {
+		if (current === WATER) {
+			board[row][col] = SHIP;
+		} else {
+			board[row][col] = WATER;
+		}
+	} else {
+		if (current === EMPTY) {
+			board[row][col] = WATER;
+		} else if (current === SHIP) {
+			board[row][col] = EMPTY;
+		} else {
+			board[row][col] = SHIP;
+		}
+	}
 
-        if (current === WATER) {
-            board[row][col] = SHIP;
-        } else {
-            board[row][col] = WATER;
-        }
+	// Rebuild ship recognition for the current builder board.
+	activeBoard = board;
+	recognizeShips();
 
-    } else {
-
-        if (current === EMPTY) {
-            board[row][col] = WATER;
-        } else if (current === SHIP) {
-            board[row][col] = EMPTY;
-        } else {
-            board[row][col] = SHIP;
-        }
-    }
-
-    renderBuilder();
+	renderBuilder();
 }

@@ -27,6 +27,12 @@ function updateInventory(puzzle) {
 	inventorySatisfied = isInventorySatisfied(puzzle);
 }
 
+function recognizeShips() {
+	const result = detectMicroBattleShips();
+
+	recognizedShips = result.recognizedShips;
+}
+
 function detectMicroBattleShips() {
 	const used = Array.from({ length: activeBoard.length }, () =>
 		Array(activeBoard[0].length).fill(false)
