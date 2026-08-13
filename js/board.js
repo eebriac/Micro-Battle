@@ -3,6 +3,7 @@ const WATER = "W";
 const SHIP = "S";
 
 let playerBoard = [];
+let activeBoard = null;
 let undoStack = [];
 let redoStack = [];
 

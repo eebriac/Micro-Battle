@@ -182,40 +182,44 @@ function determineShipOrientation(cells) {
 }
 
 function getConnectedShipCells(startRow, startCol, entity) {
-	const cells = [];
-	const visited = new Set();
 
-	function visit(row, col) {
-		if (row < 0 || row >= puzzle.height || col < 0 || col >= puzzle.width) {
-			return;
-		}
+    const cells = [];
+    const visited = new Set();
 
-		const key = `${row},${col}`;
+    function visit(row, col) {
 
-		if (visited.has(key)) {
-			return;
-		}
+        if (
+            row < 0 ||
+            row >= activeBoard.length ||
+            col < 0 ||
+            col >= activeBoard[0].length
+        ) {
+            return;
+        }
 
-		if (getTile(row, col) !== entity) {
-			return;
-		}
+        const key = `${row},${col}`;
 
-		visited.add(key);
+        if (visited.has(key)) {
+            return;
+        }
 
-		cells.push({
-			row: row,
-			col: col,
-		});
+        if (activeBoard[row][col] !== entity) {
+            return;
+        }
 
-		visit(row - 1, col);
-		visit(row + 1, col);
-		visit(row, col - 1);
-		visit(row, col + 1);
-	}
+        visited.add(key);
 
-	visit(startRow, startCol);
+        cells.push({ row, col });
 
-	return cells;
+        visit(row - 1, col);
+        visit(row + 1, col);
+        visit(row, col - 1);
+        visit(row, col + 1);
+    }
+
+    visit(startRow, startCol);
+
+    return cells;
 }
 
 function determineShipSegment(cells, row, col, orientation) {
@@ -345,22 +349,22 @@ function drawShipSprite(ctx, sprite, x, y, size, orientation) {
 function isWaterOrEdge(row, col) {
 	if (
 		row < 0 ||
-		row >= playerBoard.length ||
+		row >= activeBoard.length ||
 		col < 0 ||
-		col >= playerBoard[0].length
+		col >= activeBoard[0].length
 	) {
 		return true;
 	}
 
-	return playerBoard[row][col] === WATER;
+	return activeBoard[row][col] === WATER;
 }
 
 function isWater(row, col) {
 	if (
 		row < 0 ||
-		row >= playerBoard.length ||
+		row >= activeBoard.length ||
 		col < 0 ||
-		col >= playerBoard[0].length
+		col >= activeBoard[0].length
 	) {
 		return false;
 	}

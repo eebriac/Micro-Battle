@@ -1,63 +1,53 @@
 function showTitleScreen() {
+	const app = document.getElementById("app");
 
-    const app = document.getElementById("app");
+	app.innerHTML = titleScreenHTML();
 
-    app.innerHTML = titleScreenHTML();
+	document.getElementById("startButton").onclick = showGameScreen;
 
-    document
-        .getElementById("startButton")
-        .onclick = showGameScreen;
-
-    document
-        .getElementById("builderButton")
-        .onclick = showBuilderScreen;
+	document.getElementById("builderButton").onclick = showBuilderScreen;
 }
-
 
 function showGameScreen() {
+	const app = document.getElementById("app");
 
-    const app = document.getElementById("app");
+	app.innerHTML = gameScreenHTML();
 
-    app.innerHTML = gameScreenHTML();
+	createPlayerBoard(puzzle);
 
-    createPlayerBoard(puzzle);
+	activeBoard = playerBoard;
 
-    setupGameControls();
+	setupGameControls();
 
-    updateGame(puzzle);
+	updateGame(puzzle);
 }
 
-
 function showWinScreen() {
+	const gameScreen = document.getElementById("gameScreen");
 
-    const gameScreen = document.getElementById("gameScreen");
+	const overlay = document.createElement("div");
 
-    const overlay = document.createElement("div");
+	overlay.id = "winOverlay";
 
-    overlay.id = "winOverlay";
+	overlay.innerHTML = winScreenHTML();
 
-    overlay.innerHTML = winScreenHTML();
+	gameScreen.appendChild(overlay);
 
-    gameScreen.appendChild(overlay);
+	const nextButton = document.getElementById("nextPuzzleButton");
 
-    const nextButton =
-        document.getElementById("nextPuzzleButton");
-
-    if (currentPuzzleIndex >= puzzleIndex.length - 1) {
-        nextButton.style.display = "none";
-    }
-    else {
-        nextButton.onclick = nextPuzzle;
-    }
+	if (currentPuzzleIndex >= puzzleIndex.length - 1) {
+		nextButton.style.display = "none";
+	} else {
+		nextButton.onclick = nextPuzzle;
+	}
 }
 
 function showBuilderScreen() {
+	const app = document.getElementById("app");
 
-    const app = document.getElementById("app");
+	app.innerHTML = builderScreenHTML();
 
-    app.innerHTML = builderScreenHTML();
+	initPuzzleBuilder();
 
-    initPuzzleBuilder();
-
-    setupBuilderControls();
+	setupBuilderControls();
 }
