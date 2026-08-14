@@ -243,7 +243,7 @@ function determineShipSegment(cells, row, col, orientation) {
 
 		// Neither end is known.
 		if (!leftEndKnown && !rightEndKnown) {
-			return "unknown";
+			return "mid";
 		}
 
 		// This is the left-most cell.
@@ -289,7 +289,7 @@ function determineShipSegment(cells, row, col, orientation) {
 
 		// Neither end is known.
 		if (!topEndKnown && !bottomEndKnown) {
-			return "unknown";
+			return "mid";
 		}
 
 		// Top-most cell.

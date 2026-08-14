@@ -1,8 +1,8 @@
 function getInvalidCells(puzzle) {
 	const invalid = new Set();
 
-	for (let row = 0; row < playerBoard.length; row++) {
-		for (let col = 0; col < playerBoard[row].length; col++) {
+	for (let row = 0; row < activeBoard.length; row++) {
+		for (let col = 0; col < activeBoard[row].length; col++) {
 
 			if (!isShipCellSafe(row, col)) {
 				continue;
@@ -41,10 +41,12 @@ function getInvalidCells(puzzle) {
 	}
 	
 	// Inventory overages
-	checkInventoryOverages(
+	if (puzzle != null) {
+		checkInventoryOverages(
 		puzzle,
 		invalid
-	);
+		);
+	}
 
 	return invalid;
 }
@@ -87,9 +89,9 @@ function isShipCellSafe(row, col) {
 
 	if (
 		row < 0 ||
-		row >= playerBoard.length ||
+		row >= activeBoard.length ||
 		col < 0 ||
-		col >= playerBoard[0].length
+		col >= activeBoard[0].length
 	) {
 		return false;
 	}
@@ -124,9 +126,9 @@ function getConnectedShipCellsAnyType(startRow, startCol) {
 
 		if (
 			row < 0 ||
-			row >= playerBoard.length ||
+			row >= activeBoard.length ||
 			col < 0 ||
-			col >= playerBoard[0].length
+			col >= activeBoard[0].length
 		) {
 			return;
 		}

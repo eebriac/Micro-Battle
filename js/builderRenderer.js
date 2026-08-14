@@ -24,52 +24,37 @@ function renderBuilder() {
 	const ctx = canvas.getContext("2d");
 
 	// Background
-
 	ctx.fillStyle = "#ffffff";
 
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-	// Draw tiles
-
+	// Draw tiles using the shared tile renderer.
 	for (let row = 0; row < builderHeight; row++) {
 		for (let col = 0; col < builderWidth; col++) {
 			const x = clueSize + col * cellSize;
 
 			const y = clueSize + row * cellSize;
 
-			drawBuilderTile(ctx, getBuilderBoard()[row][col], x, y, cellSize);
+			drawTile(
+				ctx,
+				getBuilderBoard()[row][col],
+				x,
+				y,
+				cellSize,
+				row,
+				col
+			);
 		}
 	}
 
-	// Grid goes on top of everything.
+	// Draw validation X overlays
 
+	
+
+	// Grid goes on top of everything.
 	drawBuilderGrid(ctx, canvas, cellSize, clueSize);
 
 	setupBuilderInput();
-}
-
-function drawBuilderTile(ctx, tile, x, y, size) {
-    if (tile === EMPTY) {
-        return;
-    }
-
-    if (tile === WATER) {
-        drawWaterTile(ctx, x, y, size);
-        return;
-    }
-
-    drawBuilderShip(ctx, x, y, size);
-}
-
-function drawBuilderShip(ctx, x, y, size) {
-    drawShipSprite(
-        ctx,
-        spriteImages.ship_unk_s,
-        x,
-        y,
-        size,
-        "vertical"
-    );
 }
 
 function drawBuilderGrid(ctx, canvas, cellSize, clueSize) {
