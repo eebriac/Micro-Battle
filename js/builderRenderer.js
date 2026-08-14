@@ -52,6 +52,18 @@ function renderBuilder() {
 
 	// Draw validation X overlays
 
+	const invalidCells = getInvalidCells();
+
+	for (const key of invalidCells) {
+		const [row, col] = key.split(",").map(Number);
+
+		const x = clueSize + col * cellSize;
+
+		const y = clueSize + row * cellSize;
+
+		drawInvalidX(ctx, x, y, cellSize);
+	}
+	
 	// Grid goes on top of everything.
 	drawBuilderGrid(ctx, canvas, cellSize, clueSize);
 

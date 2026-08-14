@@ -1,3 +1,4 @@
+
 function getInvalidCells() {
 	const invalid = new Set();
 
