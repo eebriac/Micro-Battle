@@ -46,6 +46,14 @@ function renderBuilder() {
 			);
 		}
 	}
+	
+	// Draw row and column clues
+	drawBuilderClues(
+    ctx,
+    canvas,
+    cellSize,
+    clueSize
+);
 
 	// Draw validation X overlays
 
@@ -88,4 +96,45 @@ function drawBuilderGrid(ctx, canvas, cellSize, clueSize) {
 
 		ctx.stroke();
 	}
+}
+
+function drawBuilderClues(ctx, canvas, cellSize, clueSize) {
+
+    ctx.fillStyle = "#000000";
+
+    ctx.font =
+        `${Math.floor(cellSize * 0.45)}px sans-serif`;
+
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+
+    // Row clues
+    for (let row = 0; row < builderHeight; row++) {
+
+        const y =
+            clueSize +
+            row * cellSize +
+            cellSize / 2;
+
+        ctx.fillText(
+            builderRowClues[row],
+            clueSize / 2,
+            y
+        );
+    }
+
+    // Column clues
+    for (let col = 0; col < builderWidth; col++) {
+
+        const x =
+            clueSize +
+            col * cellSize +
+            cellSize / 2;
+
+        ctx.fillText(
+            builderColClues[col],
+            x,
+            clueSize / 2
+        );
+    }
 }

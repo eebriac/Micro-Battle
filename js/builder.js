@@ -42,6 +42,8 @@ function initPuzzleBuilder() {
 	builderMode = "solution";
 	activeBoard = getBuilderBoard();
 
+	updateBuilderClues();
+
 	renderBuilder();
 }
 
@@ -66,6 +68,7 @@ function clearBuilder() {
 
 	activeBoard = board;
 	recognizeShips();
+	updateBuilderClues();
 
 	renderBuilder();
 }
@@ -119,9 +122,43 @@ function cycleBuilderTile(row, col) {
 		}
 	}
 
-	// Rebuild ship recognition for the current builder board.
 	activeBoard = board;
 	recognizeShips();
+	updateBuilderClues();
 
 	renderBuilder();
+}
+
+let builderRowClues = [];
+let builderColClues = [];
+
+function updateBuilderClues() {
+	// Clues always come from the solution board.
+	builderRowClues = [];
+
+	for (let row = 0; row < builderHeight; row++) {
+		let count = 0;
+
+		for (let col = 0; col < builderWidth; col++) {
+			if (solutionBoard[row][col] === SHIP) {
+				count++;
+			}
+		}
+
+		builderRowClues.push(count);
+	}
+
+	builderColClues = [];
+
+	for (let col = 0; col < builderWidth; col++) {
+		let count = 0;
+
+		for (let row = 0; row < builderHeight; row++) {
+			if (solutionBoard[row][col] === SHIP) {
+				count++;
+			}
+		}
+
+		builderColClues.push(count);
+	}
 }
