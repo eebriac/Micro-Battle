@@ -7,7 +7,7 @@ let activeBoard = null;
 let undoStack = [];
 let redoStack = [];
 
-function createPlayerBoard(puzzle) {
+function createPlayerBoard() {
 
     playerBoard = [];
 
@@ -34,11 +34,11 @@ function createPlayerBoard(puzzle) {
 
     gameWon = false;
 
-    createInventory(puzzle);
-    updateInventory(puzzle);
+    createInventory();
+    updateInventory();
 }
 
-function isInitialTile(puzzle, row, col) {
+function isInitialTile(row, col) {
 	return puzzle.initialState[row][col] !== EMPTY;
 }
 
@@ -62,7 +62,7 @@ function makeMove(row, col) {
 
 	cycleTile(row, col);
 
-	updateInventory(puzzle);
+	updateInventory();
 }
 
 function cycleTile(row, col) {
@@ -96,7 +96,7 @@ function undoMove() {
 
     activeBoard = playerBoard;
 
-    updateInventory(puzzle);
+    updateInventory();
 
     return true;
 }
@@ -112,7 +112,7 @@ function redoMove() {
 
     activeBoard = playerBoard;
 
-    updateInventory(puzzle);
+    updateInventory();
 
     return true;
 }
@@ -121,11 +121,11 @@ function copyBoard(board) {
 	return board.map((row) => [...row]);
 }
 
-function resetPlayerBoard(puzzle) {
-	createPlayerBoard(puzzle);
+function resetPlayerBoard() {
+	createPlayerBoard();
 }
 
-function completePuzzle(puzzle) {
+function completePuzzle() {
 	for (let row = 0; row < puzzle.height; row++) {
 		for (let col = 0; col < puzzle.width; col++) {
 			if (playerBoard[row][col] === EMPTY) {
@@ -133,7 +133,7 @@ function completePuzzle(puzzle) {
 			}
 		}
 	}
-    updateInventory(puzzle);
+    updateInventory();
 
 	gameWon = true;
 }

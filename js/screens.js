@@ -13,11 +13,11 @@ function showGameScreen() {
 
 	app.innerHTML = gameScreenHTML();
 
-	createPlayerBoard(puzzle);
+	createPlayerBoard();
 
 	setupGameControls();
 
-	updateGame(puzzle);
+	updateGame();
 }
 
 function showWinScreen() {

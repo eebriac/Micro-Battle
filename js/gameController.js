@@ -1,6 +1,4 @@
 let currentPuzzleIndex = 0;
-let puzzle = null;
-
 let gameWon = false;
 let inventorySatisfied = false;
 
@@ -17,20 +15,20 @@ function handleReset() {
 		return;
 	}
 
-	resetPlayerBoard(puzzle);
+	resetPlayerBoard();
 
-	updateGame(puzzle);
+	updateGame();
 }
 
 function handleUndo() {
 	if (undoMove()) {
-		updateGame(puzzle);
+		updateGame();
 	}
 }
 
 function handleRedo() {
 	if (redoMove()) {
-		updateGame(puzzle);
+		updateGame();
 	}
 }
 
@@ -46,12 +44,12 @@ async function nextPuzzle() {
 	showGameScreen();
 }
 
-function updateGame(puzzle) {
-	if (!gameWon && isPuzzleSolved(puzzle)) {
-		completePuzzle(puzzle);
+function updateGame() {
+	if (!gameWon && isPuzzleSolved()) {
+		completePuzzle();
 	}
 
-	renderBoard(puzzle);
+	renderBoard();
 
 	updateHistoryButtons();
 
@@ -72,7 +70,7 @@ function updateHistoryButtons() {
 	redoButton.disabled = gameWon || !canRedo();
 }
 
-function isPuzzleSolved(puzzle) {
+function isPuzzleSolved() {
 
 	for (let row = 0; row < puzzle.height; row++) {
 		for (let col = 0; col < puzzle.width; col++) {

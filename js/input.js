@@ -1,4 +1,4 @@
-function setupInput(canvas, puzzle, inventoryHeight) {
+function setupInput(canvas, inventoryHeight) {
 
     canvas.addEventListener("pointerdown", function (event) {
 
@@ -40,7 +40,7 @@ function setupInput(canvas, puzzle, inventoryHeight) {
         }
 
 
-        if (isInitialTile(puzzle, row, col)) {
+        if (isInitialTile(row, col)) {
             return;
         }
 
@@ -49,9 +49,8 @@ function setupInput(canvas, puzzle, inventoryHeight) {
             return;
         }
 
-
         makeMove(row, col);
 
-        updateGame(puzzle);
+        updateGame();
     });
 }

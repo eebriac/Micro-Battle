@@ -1,12 +1,12 @@
-function validatePuzzle(puzzle) {
-	validateStructure(puzzle);
+function validatePuzzle() {
+	validateStructure();
 
 	if (puzzle.type === "microbattle") {
-		validateMicrobattle(puzzle);
+		validateMicrobattle();
 	}
 }
 
-function validateStructure(puzzle) {
+function validateStructure() {
 	if (!puzzle.id) {
 		throw new Error("Puzzle is missing an ID");
 	}
@@ -52,15 +52,15 @@ function validateStructure(puzzle) {
 	}
 }
 
-function validateMicrobattle(puzzle) {
-	validateClues(puzzle);
+function validateMicrobattle() {
+	validateClues();
 
-	validateInitialState(puzzle);
+	validateInitialState();
 
-	validateSolution(puzzle);
+	validateSolution();
 }
 
-function validateClues(puzzle) {
+function validateClues() {
 	if (
 		!Array.isArray(puzzle.rowClues) ||
 		puzzle.rowClues.length !== puzzle.height
@@ -76,7 +76,7 @@ function validateClues(puzzle) {
 	}
 }
 
-function validateInitialState(puzzle) {
+function validateInitialState() {
 	for (let row = 0; row < puzzle.height; row++) {
 		for (let col = 0; col < puzzle.width; col++) {
 			const initialTile = puzzle.initialState[row][col];
@@ -108,7 +108,7 @@ function validateInitialState(puzzle) {
 	}
 }
 
-function validateSolution(puzzle) {
+function validateSolution() {
 	// Check rows
 
 	for (let row = 0; row < puzzle.height; row++) {

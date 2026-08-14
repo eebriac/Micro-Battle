@@ -1,4 +1,4 @@
-function getInvalidCells(puzzle) {
+function getInvalidCells() {
 	const invalid = new Set();
 
 	for (let row = 0; row < activeBoard.length; row++) {
@@ -42,10 +42,7 @@ function getInvalidCells(puzzle) {
 	
 	// Inventory overages
 	if (puzzle != null) {
-		checkInventoryOverages(
-		puzzle,
-		invalid
-		);
+		checkInventoryOverages(invalid);
 	}
 
 	return invalid;
@@ -59,7 +56,7 @@ function isInventoryItemOverLimit(item) {
 	return count > item.count;
 }
 
-function checkInventoryOverages(puzzle, invalid) {
+function checkInventoryOverages(invalid) {
 
 	for (const item of puzzle.inventory) {
 

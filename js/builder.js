@@ -1,14 +1,10 @@
-let solutionBoard = [];
-let initialStateBoard = [];
-
 let builderMode = "solution";
-
-function getBuilderBoard() {
-	return builderMode === "solution" ? solutionBoard : initialStateBoard;
-}
-
 const builderWidth = 8;
 const builderHeight = 10;
+
+function getBuilderBoard() {
+	return builderMode === "solution" ? puzzle.solution : puzzle.initialState;
+}
 
 function toggleBuilderMode() {
 	if (builderMode === "solution") {
@@ -31,13 +27,7 @@ function toggleBuilderMode() {
 }
 
 function initPuzzleBuilder() {
-	solutionBoard = Array.from({ length: builderHeight }, () =>
-		Array(builderWidth).fill(WATER)
-	);
-
-	initialStateBoard = Array.from({ length: builderHeight }, () =>
-		Array(builderWidth).fill(EMPTY)
-	);
+	puzzle = createEmptyPuzzle(builderWidth, builderHeight);
 
 	builderMode = "solution";
 	activeBoard = getBuilderBoard();
@@ -140,7 +130,7 @@ function updateBuilderClues() {
 		let count = 0;
 
 		for (let col = 0; col < builderWidth; col++) {
-			if (solutionBoard[row][col] === SHIP) {
+			if (puzzle.solution[row][col] === SHIP) {
 				count++;
 			}
 		}
@@ -154,7 +144,7 @@ function updateBuilderClues() {
 		let count = 0;
 
 		for (let row = 0; row < builderHeight; row++) {
-			if (solutionBoard[row][col] === SHIP) {
+			if (puzzle.solution[row][col] === SHIP) {
 				count++;
 			}
 		}

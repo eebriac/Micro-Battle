@@ -27,7 +27,7 @@ function loadSprite(image, src) {
 		const board = document.getElementById("board");
 
 		if (puzzle && board) {
-			renderBoard(puzzle);
+			renderBoard();
 		}
 	};
 
@@ -74,7 +74,7 @@ loadSprite(spriteImages.ship_mid, "assets/sprites/microbes/ship/ship_mid.png");
 
 loadSprite(spriteImages.ship_end, "assets/sprites/microbes/ship/ship_end.png");
 
-function renderBoard(puzzle) {
+function renderBoard() {
 	const inventoryRowHeight = 45;
 	const inventoryPadding = 10;
 	const inventoryColumns = 2;
@@ -112,7 +112,7 @@ function renderBoard(puzzle) {
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
 	// Draw inventory
-	drawInventory(ctx, puzzle, inventoryHeight);
+	drawInventory(ctx, inventoryHeight);
 
 	// Board geometry
 	const boardTop = inventoryHeight;
@@ -135,7 +135,7 @@ function renderBoard(puzzle) {
 
 	// Draw validation X overlays
 
-	const invalidCells = getInvalidCells(puzzle);
+	const invalidCells = getInvalidCells();
 
 	for (const key of invalidCells) {
 		const [row, col] = key.split(",").map(Number);
@@ -178,9 +178,7 @@ function renderBoard(puzzle) {
 		ctx.stroke();
 	}
 
-	// ------------------------------------------------
 	// Draw clues
-	// ------------------------------------------------
 
 	ctx.fillStyle = "#000000";
 
@@ -205,10 +203,10 @@ function renderBoard(puzzle) {
 		ctx.fillText(puzzle.colClues[col], x, y);
 	}
 
-	setupInput(canvas, puzzle, inventoryHeight);
+	setupInput(canvas, inventoryHeight);
 }
 
-function drawInventory(ctx, puzzle, inventoryHeight) {
+function drawInventory(ctx, inventoryHeight) {
 	const columnWidth = ctx.canvas.width / 2;
 
 	for (let i = 0; i < puzzle.inventory.length; i++) {
@@ -221,11 +219,11 @@ function drawInventory(ctx, puzzle, inventoryHeight) {
 
 		const y = 10 + row * 45;
 
-		drawInventoryItem(ctx, puzzle, item, x, y, columnWidth, i);
+		drawInventoryItem(ctx, item, x, y, columnWidth, i);
 	}
 }
 
-function drawInventoryItem(ctx, puzzle, item, x, y, width, index) {
+function drawInventoryItem(ctx, item, x, y, width, index) {
 	const state = inventoryState[index];
 
 	const sprite = inventorySprites[item.entity];

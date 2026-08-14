@@ -1,7 +1,7 @@
 let inventoryState = [];
 let recognizedShips = [];
 
-function createInventory(puzzle) {
+function createInventory() {
 	inventoryState = [];
 
 	for (const item of puzzle.inventory) {
@@ -15,7 +15,7 @@ function createInventory(puzzle) {
 	inventorySatisfied = false;
 }
 
-function updateInventory(puzzle) {
+function updateInventory() {
 	const result = detectMicroBattleShips();
 
 	for (const item of inventoryState) {
@@ -24,7 +24,7 @@ function updateInventory(puzzle) {
 
 	recognizedShips = result.recognizedShips;
 
-	inventorySatisfied = isInventorySatisfied(puzzle);
+	inventorySatisfied = isInventorySatisfied();
 }
 
 function recognizeShips() {
@@ -220,7 +220,7 @@ function isShipCell(row, col) {
 	return tile !== EMPTY && tile !== WATER;
 }
 
-function isInventorySatisfied(puzzle) {
+function isInventorySatisfied() {
 	for (const item of inventoryState) {
 		if (item.completed !== item.required) {
 			return false;
