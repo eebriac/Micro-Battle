@@ -32,8 +32,6 @@ function initPuzzleBuilder() {
 	builderMode = "solution";
 	activeBoard = getBuilderBoard();
 
-	updateBuilderClues();
-
 	renderBuilder();
 }
 
@@ -59,6 +57,7 @@ function clearBuilder() {
 	activeBoard = board;
 	recognizeShips();
 	updateBuilderClues();
+	updateBuilderInventory();
 
 	renderBuilder();
 }
@@ -92,29 +91,45 @@ function setupBuilderInput() {
 }
 
 function cycleBuilderTile(row, col) {
+
 	const board = getBuilderBoard();
 
+	if (builderMode === "initial") {
+
+		// Toggle whether this solution cell is revealed.
+		if (puzzle.initialState[row][col] === EMPTY) {
+
+			puzzle.initialState[row][col] =
+				puzzle.solution[row][col];
+
+		} else {
+
+			puzzle.initialState[row][col] = EMPTY;
+		}
+
+		activeBoard = puzzle.initialState;
+
+		recognizeShips();
+
+		renderBuilder();
+
+		return;
+	}
+
+	// Solution mode
 	const current = board[row][col];
 
-	if (builderMode === "solution") {
-		if (current === WATER) {
-			board[row][col] = SHIP;
-		} else {
-			board[row][col] = WATER;
-		}
+	if (current === WATER) {
+		board[row][col] = SHIP;
 	} else {
-		if (current === EMPTY) {
-			board[row][col] = WATER;
-		} else if (current === SHIP) {
-			board[row][col] = EMPTY;
-		} else {
-			board[row][col] = SHIP;
-		}
+		board[row][col] = WATER;
 	}
 
 	activeBoard = board;
+
 	recognizeShips();
 	updateBuilderClues();
+	updateBuilderInventory();
 
 	renderBuilder();
 }
@@ -150,5 +165,23 @@ function updateBuilderClues() {
 		}
 
 		builderColClues.push(count);
+	}
+}
+
+function updateBuilderInventory() {
+
+	puzzle.inventory = [];
+	const result = detectMicroBattleShips();	
+
+	for (const entity in result.counts) {
+
+		const count = result.counts[entity];
+
+		if (count > 0) {
+			puzzle.inventory.push({
+				entity: entity,
+				count: count
+			});
+		}
 	}
 }

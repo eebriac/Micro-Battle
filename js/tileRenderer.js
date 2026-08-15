@@ -44,6 +44,11 @@ function getRecognizedShipSegment(ship, row, col) {
 }
 
 function drawTile(ctx, tile, x, y, size, row, col) {
+	const initial =
+		puzzle &&
+		puzzle.initialState &&
+		puzzle.initialState[row][col] !== EMPTY;
+
 	if (tile === EMPTY) {
 		drawEmptyTile(ctx, x, y, size);
 	} else if (tile === WATER) {
@@ -51,6 +56,21 @@ function drawTile(ctx, tile, x, y, size, row, col) {
 	} else {
 		drawShipTile(ctx, x, y, size, row, col);
 	}
+
+	if (initial) {
+		drawInitialTileBorder(ctx, x, y, size);
+	}
+}
+
+function drawInitialTileBorder(ctx, x, y, size) {
+	ctx.save();
+
+	ctx.strokeStyle = "#cccccc";
+	ctx.lineWidth = 5;
+
+	ctx.strokeRect(x + 1, y + 1, size - 2, size - 2);
+
+	ctx.restore();
 }
 
 function drawEmptyTile(ctx, x, y, size) {
@@ -89,8 +109,6 @@ function drawWaterTile(ctx, x, y, size) {
 function drawShipTile(ctx, x, y, size, row, col) {
 	const tile = activeBoard[row][col];
 
-	// Is this cell part of a ship that the inventory
-	// has recognized as complete?
 	const recognizedShip = getRecognizedShipAt(row, col);
 
 	if (recognizedShip) {
@@ -99,16 +117,16 @@ function drawShipTile(ctx, x, y, size, row, col) {
 		let sprite;
 
 		if (segment === "single") {
-	sprite = spriteImages.ship_1;
-} else if (segment === "top") {
-	sprite = spriteImages.ship_top;
-} else if (segment === "mid") {
-	sprite = spriteImages.ship_mid;
-} else if (segment === "end") {
-	sprite = spriteImages.ship_end;
-} else {
-	sprite = spriteImages.ship_unk_s;
-}
+			sprite = spriteImages.ship_1;
+		} else if (segment === "top") {
+			sprite = spriteImages.ship_top;
+		} else if (segment === "mid") {
+			sprite = spriteImages.ship_mid;
+		} else if (segment === "end") {
+			sprite = spriteImages.ship_end;
+		} else {
+			sprite = spriteImages.ship_unk_s;
+		}
 
 		drawShipSprite(ctx, sprite, x, y, size, recognizedShip.direction);
 
@@ -116,9 +134,7 @@ function drawShipTile(ctx, x, y, size, row, col) {
 	}
 
 	// Not recognized as complete yet.
-	// Determine what we know about the current cluster.
 	const cells = getConnectedShipCells(row, col, tile);
-
 	if (cells.length === 1) {
 		if (scoutIsComplete(row, col)) {
 			drawShipSprite(ctx, spriteImages.ship_1_s, x, y, size, "vertical");
@@ -149,14 +165,14 @@ function drawShipTile(ctx, x, y, size, row, col) {
 	let sprite;
 
 	if (segment === "top") {
-	sprite = spriteImages.ship_top_s;
-} else if (segment === "mid") {
-	sprite = spriteImages.ship_mid_s;
-} else if (segment === "end") {
-	sprite = spriteImages.ship_end_s;
-} else {
-	sprite = spriteImages.ship_unk_s;
-}
+		sprite = spriteImages.ship_top_s;
+	} else if (segment === "mid") {
+		sprite = spriteImages.ship_mid_s;
+	} else if (segment === "end") {
+		sprite = spriteImages.ship_end_s;
+	} else {
+		sprite = spriteImages.ship_unk_s;
+	}
 
 	drawShipSprite(ctx, sprite, x, y, size, orientation);
 }
@@ -182,44 +198,42 @@ function determineShipOrientation(cells) {
 }
 
 function getConnectedShipCells(startRow, startCol, entity) {
+	const cells = [];
+	const visited = new Set();
 
-    const cells = [];
-    const visited = new Set();
+	function visit(row, col) {
+		if (
+			row < 0 ||
+			row >= activeBoard.length ||
+			col < 0 ||
+			col >= activeBoard[0].length
+		) {
+			return;
+		}
 
-    function visit(row, col) {
+		const key = `${row},${col}`;
 
-        if (
-            row < 0 ||
-            row >= activeBoard.length ||
-            col < 0 ||
-            col >= activeBoard[0].length
-        ) {
-            return;
-        }
+		if (visited.has(key)) {
+			return;
+		}
 
-        const key = `${row},${col}`;
+		if (activeBoard[row][col] !== entity) {
+			return;
+		}
 
-        if (visited.has(key)) {
-            return;
-        }
+		visited.add(key);
 
-        if (activeBoard[row][col] !== entity) {
-            return;
-        }
+		cells.push({ row, col });
 
-        visited.add(key);
+		visit(row - 1, col);
+		visit(row + 1, col);
+		visit(row, col - 1);
+		visit(row, col + 1);
+	}
 
-        cells.push({ row, col });
+	visit(startRow, startCol);
 
-        visit(row - 1, col);
-        visit(row + 1, col);
-        visit(row, col - 1);
-        visit(row, col + 1);
-    }
-
-    visit(startRow, startCol);
-
-    return cells;
+	return cells;
 }
 
 function determineShipSegment(cells, row, col, orientation) {
@@ -228,18 +242,14 @@ function determineShipSegment(cells, row, col, orientation) {
 	}
 
 	if (orientation === "horizontal") {
-		const sorted = [...cells].sort(
-			(a, b) => a.col - b.col
-		);
+		const sorted = [...cells].sort((a, b) => a.col - b.col);
 
 		const first = sorted[0];
 		const last = sorted[sorted.length - 1];
 
-		const leftEndKnown =
-			isWaterOrEdge(first.row, first.col - 1);
+		const leftEndKnown = isWaterOrEdge(first.row, first.col - 1);
 
-		const rightEndKnown =
-			isWaterOrEdge(last.row, last.col + 1);
+		const rightEndKnown = isWaterOrEdge(last.row, last.col + 1);
 
 		// Neither end is known.
 		if (!leftEndKnown && !rightEndKnown) {
@@ -248,7 +258,6 @@ function determineShipSegment(cells, row, col, orientation) {
 
 		// This is the left-most cell.
 		if (row === first.row && col === first.col) {
-
 			// Only call it TOP when the left end
 			// is actually proven.
 			if (leftEndKnown) {
@@ -260,7 +269,6 @@ function determineShipSegment(cells, row, col, orientation) {
 
 		// This is the right-most cell.
 		if (row === last.row && col === last.col) {
-
 			// Only call it END when the right end
 			// is actually proven.
 			if (rightEndKnown) {
@@ -274,18 +282,14 @@ function determineShipSegment(cells, row, col, orientation) {
 	}
 
 	if (orientation === "vertical") {
-		const sorted = [...cells].sort(
-			(a, b) => a.row - b.row
-		);
+		const sorted = [...cells].sort((a, b) => a.row - b.row);
 
 		const first = sorted[0];
 		const last = sorted[sorted.length - 1];
 
-		const topEndKnown =
-			isWaterOrEdge(first.row - 1, first.col);
+		const topEndKnown = isWaterOrEdge(first.row - 1, first.col);
 
-		const bottomEndKnown =
-			isWaterOrEdge(last.row + 1, last.col);
+		const bottomEndKnown = isWaterOrEdge(last.row + 1, last.col);
 
 		// Neither end is known.
 		if (!topEndKnown && !bottomEndKnown) {
@@ -294,7 +298,6 @@ function determineShipSegment(cells, row, col, orientation) {
 
 		// Top-most cell.
 		if (row === first.row && col === first.col) {
-
 			if (topEndKnown) {
 				return "top";
 			}
@@ -304,7 +307,6 @@ function determineShipSegment(cells, row, col, orientation) {
 
 		// Bottom-most cell.
 		if (row === last.row && col === last.col) {
-
 			if (bottomEndKnown) {
 				return "end";
 			}
@@ -317,7 +319,6 @@ function determineShipSegment(cells, row, col, orientation) {
 
 	return "unknown";
 }
-
 
 function drawShipSprite(ctx, sprite, x, y, size, orientation) {
 	if (!sprite || !sprite.complete || sprite.naturalWidth === 0) {

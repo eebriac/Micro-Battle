@@ -28,22 +28,14 @@ function renderBuilder() {
 
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-	// Draw tiles using the shared tile renderer.
+	// Draw tiles using tileRenderer
 	for (let row = 0; row < builderHeight; row++) {
 		for (let col = 0; col < builderWidth; col++) {
 			const x = clueSize + col * cellSize;
 
 			const y = clueSize + row * cellSize;
 
-			drawTile(
-				ctx,
-				getBuilderBoard()[row][col],
-				x,
-				y,
-				cellSize,
-				row,
-				col
-			);
+			drawBuilderTile(ctx, row, col, x, y, cellSize);
 		}
 	}
 
@@ -63,11 +55,36 @@ function renderBuilder() {
 
 		drawInvalidX(ctx, x, y, cellSize);
 	}
-	
+
 	// Grid goes on top of everything.
 	drawBuilderGrid(ctx, canvas, cellSize, clueSize);
 
 	setupBuilderInput();
+}
+
+function drawBuilderTile(ctx, row, col, x, y, cellSize) {
+	const solutionTile = puzzle.solution[row][col];
+
+	const initialTile = puzzle.initialState[row][col];
+
+	// Solution mode uses normal rendering.
+	if (builderMode === "solution") {
+		drawTile(ctx, solutionTile, x, y, cellSize, row, col);
+
+		return;
+	}
+
+	// Initial-state mode:
+	// Always draw the solution underneath.
+	ctx.save();
+
+	if (initialTile === EMPTY) {
+		ctx.globalAlpha = 0.25;
+	}
+
+	drawTile(ctx, solutionTile, x, y, cellSize, row, col);
+
+	ctx.restore();
 }
 
 function drawBuilderGrid(ctx, canvas, cellSize, clueSize) {
@@ -115,13 +132,13 @@ function drawBuilderClues(ctx, canvas, cellSize, clueSize) {
 	for (let row = 0; row < builderHeight; row++) {
 		const y = clueSize + row * cellSize + cellSize / 2;
 
-		ctx.fillText(builderRowClues[row], clueSize / 2, y);
+		ctx.fillText(puzzle.rowClues[row], clueSize / 2, y);
 	}
 
 	// Column clues
 	for (let col = 0; col < builderWidth; col++) {
 		const x = clueSize + col * cellSize + cellSize / 2;
 
-		ctx.fillText(builderColClues[col], x, clueSize / 2);
+		ctx.fillText(puzzle.colClues[col], x, clueSize / 2); 
 	}
 }
